@@ -1,5 +1,5 @@
-import Navbar from '../navigation bar/navbar';
-import './styles.css';
+import Navbar from '../../components/navigation bar/navbar';
+import './dashboard_styles.css';
 
 const dashboard = () => {
 
@@ -7,7 +7,7 @@ const dashboard = () => {
     const user_session_data = res_dict ? JSON.parse(res_dict)["data"] : null;  
     
   return (
-        <div className="container">
+        <div className="dash-container">
             <div className="content-section">
                 <div className='navigation-panel'>
                     <Navbar/>

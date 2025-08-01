@@ -1,8 +1,8 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./components/login/login";
-import Dashboard from "./components/dashboard/dashboard";
-import FormPage from "./components/form/form_page";
+import Login from "./pages/login/login";
+import Dashboard from "./pages/dashboard/dashboard";
+import FormPage from "./pages/form/form_page";
 import ProtectedRoute from './components/routeGuard/routeGuard';
 function App() {
 

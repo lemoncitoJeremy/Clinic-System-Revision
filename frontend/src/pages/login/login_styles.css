@@ -1,15 +1,18 @@
-body{
-    margin: 0px;
-    padding: 0px;
-    display: flex;
+
+.main-container{
+    display: flex;  
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    font-family: sans-serif;
+    height: 100vh;
+    background-color: #dee6e2;
 }
-
-.container{
+.sub-container{
     display: flex;
+    width: 500px;
+    height: 300px;
+    border-radius: 12px 12px 12px 12px;
+    box-shadow: 10px 10px 5px rgb(146, 146, 146);
+    background-color: #fff;
 }
 
 .logo-container{
@@ -20,6 +23,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 .login-container {

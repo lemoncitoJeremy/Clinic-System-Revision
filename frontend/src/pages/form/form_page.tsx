@@ -1,8 +1,12 @@
-import './styles.css';
+import Navbar from '../../components/navigation bar/navbar';
+import './form_styles.css';
 
 const form_page = () => {
   return (
-    <div className="container">
+    <div className="form-container">
+        <div className="form-navigation-panel">
+        <Navbar />
+        </div>
         <form className="form-page" id="formPage">
             <div className="left-section">
                 <div className="input-container" id="1"></div>
