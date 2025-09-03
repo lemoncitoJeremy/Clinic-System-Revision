@@ -23,7 +23,8 @@ const navbar = () => {
             <a  onClick= {()=>navigate("/logs")} id="nav-logs" className="admin-only">Logs</a> 
           </>
         )}
-            <a onClick= {()=>navigate("/forms")}>Forms</a>
+            <a onClick= {()=>navigate("/services")}>Services</a>
+            <a onClick= {()=>navigate("/queue")}>Queue</a>
             <a onClick= {()=>navigate("/settings")}>Settings</a>
             <a onClick= {handleLogout}>Log Out</a>
     </nav>

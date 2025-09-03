@@ -1,0 +1,41 @@
+.services-container {
+    width: 100vw;
+    height: 100vh; 
+    border-radius: 10px;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+    overflow: hidden;
+    
+}
+
+.list-services {
+    width: calc(100vw - 150px);
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);   
+    gap: 10px;
+    padding: 30px;
+    background-color: #ffffff; 
+}
+
+.list-services button {
+    width: 100%;
+    max-width: 350px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #dee6e2;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.list-services button:hover {
+    background:  #a2cfb8;
+}

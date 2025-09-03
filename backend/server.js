@@ -24,6 +24,7 @@ class Server {
         this.configureMiddleware();
         this.initializeDatabase();
         this.handleLogin();
+        this.SelectService();
     }
 
     configureMiddleware() {
@@ -65,6 +66,21 @@ class Server {
                 } else {
                     res.status(401).json({ success: false, message: 'Invalid credentials' });
                 }
+            });
+        });
+    }
+    
+    SelectService() {
+        this.app.get("/selectService/:service", (req, res) => {
+            const service = req.params.service;
+            const sql = dbQueries.queries.selectService;
+            console.log(service, sql)
+            this.db.query(sql, [service], (err, results) => {
+                if (err) {
+                return res.status(500).json({ error: err.message });
+                }
+                console.log(results)
+                res.json(results);
             });
         });
     }

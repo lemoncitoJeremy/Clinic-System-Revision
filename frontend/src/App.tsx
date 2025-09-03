@@ -4,6 +4,7 @@ import Login from "./pages/login/login";
 import Dashboard from "./pages/dashboard/dashboard";
 import FormPage from "./pages/form/form_page";
 import ProtectedRoute from './components/routeGuard/routeGuard';
+import ServicesPage from "./pages/services/services"
 function App() {
 
   return (
@@ -19,6 +20,11 @@ function App() {
         <Route path="/forms" element={
             <ProtectedRoute> 
             <FormPage/>
+            </ProtectedRoute>} 
+        />
+        <Route path="/services" element={
+            <ProtectedRoute> 
+            <ServicesPage/>
             </ProtectedRoute>} 
         />
       </Routes>

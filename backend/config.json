@@ -1,6 +1,7 @@
 {
   "queries": {
         "login": "SELECT * FROM dim_accounts WHERE username = ? AND password = ?",
-        "sign_up": "INSERT INTO dim_accounts (username, email, password) VALUES (?, ?, ?)"
+        "sign_up": "INSERT INTO dim_accounts (username, email, password) VALUES (?, ?, ?)",
+        "selectService": "SELECT * FROM dim_service_exams WHERE service_type = ?"
     }
 }
