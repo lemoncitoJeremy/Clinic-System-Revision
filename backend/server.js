@@ -124,12 +124,112 @@ class Server {
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
                 if (results.length > 0) {
-                    res.json({ success: true, maxCaseId: results[0].case_id });
+                    console.log("old",results[0].case_id);
+                    const genId = this.generateCaseId(results[0].case_id, service);
+                    console.log("Generated Case ID: ", genId);
+                    res.json({ success: true, maxCaseId: genId });
                 } else {
-                    res.json({ success: true, maxCaseId: null });
+                    const generatedCaseId = this.generateCaseId(null, service);
+                    res.json({ success: true, maxCaseId: generatedCaseId });
                     console.log("No case IDs found");
                 }
             });
+        });
+    }
+
+    generateCaseId(maxCaseId, service) {
+        const date = new Date();
+        const yyyy = date.getFullYear().toString();
+        const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+        const dd = date.getDate().toString().padStart(2, '0');
+        const datePrefix = `${yyyy}${mm}${dd}`;
+        console.log(datePrefix);
+        // Pick service character
+        const serviceChar = service.toLowerCase() === 'xray' ? 'x' : 'u';
+
+        let sequenceNumber = 1; // default for first case of the day
+
+        if (maxCaseId) {
+            const regex = new RegExp(`^(${datePrefix}${serviceChar})(\\d{4})$`);
+            const match = maxCaseId.match(regex);
+
+            if (match) {
+                sequenceNumber = parseInt(match[2], 10) + 1;
+            }
+        }
+        
+        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        return `${datePrefix}${serviceChar}${sequenceStr}`;
+    }
+
+    Createcase() {
+        this.app.post("/create-case", async (req, res) => {
+            const {
+                case_Id,
+                firstname,
+                middlename,
+                lastname,
+                birthdate,
+                gender,
+                email,
+                phone,
+                address,
+                patientSource,
+                requestingPhysician,
+                requestDate,
+                examType,
+                serviceType,
+                status
+            } = req.body;
+
+            try {
+                const physicianId = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.retrievePhysicians,
+                        [requestingPhysician],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            if (results.length === 0) {
+                                return reject(new Error("Physician not found"));
+                            }
+                            resolve(results[0].physician_id);
+                        }
+                    );
+                });
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.createCase,
+                        [
+                            case_Id,
+                            firstname,
+                            middlename,
+                            lastname,
+                            birthdate,
+                            gender,
+                            email,
+                            phone,
+                            address,
+                            patientSource,
+                            physicianId,
+                            requestDate,
+                            examType,
+                            serviceType,
+                            status
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                res.json({ success: true, message: "Case created successfully" });
+
+            } catch (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ success: false, error: error.message });
+            }
         });
     }
 
