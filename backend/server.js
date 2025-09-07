@@ -25,6 +25,8 @@ class Server {
         this.initializeDatabase();
         this.handleLogin();
         this.SelectService();
+        this.Checkcase();
+        this.Createcase();
     }
 
     configureMiddleware() {
@@ -73,14 +75,60 @@ class Server {
     SelectService() {
         this.app.get("/selectService/:service", (req, res) => {
             const service = req.params.service;
-            const sql = dbQueries.queries.selectService;
-            console.log(service, sql)
-            this.db.query(sql, [service], (err, results) => {
+            const sqlService = dbQueries.queries.selectService;
+            const sqlPhysicians = dbQueries.queries.registeredPhysicians;
+             // Run both queries in parallel
+            const query1 = new Promise((resolve, reject) => {
+                this.db.query(sqlService, [service], (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results);
+                });
+            });
+
+            const query2 = new Promise((resolve, reject) => {
+                this.db.query(sqlPhysicians, (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results);
+                });
+            });
+
+            Promise.all([query1, query2])
+            .then(([serviceResults, physicianResults]) => {
+                res.json({
+                    service: serviceResults,
+                    physicians: physicianResults
+                });
+            })
+            .catch(err => {
+                res.status(500).json({ error: err.message });
+            });
+
+        });
+    }
+
+    Checkcase() {
+        this.app.get("/check-case", (req, res) => {
+            const sql = dbQueries.queries.checkCase;
+            const { service } = req.query;
+            let wildcard = null;
+
+            if (service === "xray"){
+                wildcard = "%x%";
+            } else {
+                wildcard = "%u%";
+            }
+
+            this.db.query(sql, [wildcard], (err, results) => {
                 if (err) {
-                return res.status(500).json({ error: err.message });
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
                 }
-                console.log(results)
-                res.json(results);
+                if (results.length > 0) {
+                    res.json({ success: true, maxCaseId: results[0].case_id });
+                } else {
+                    res.json({ success: true, maxCaseId: null });
+                    console.log("No case IDs found");
+                }
             });
         });
     }

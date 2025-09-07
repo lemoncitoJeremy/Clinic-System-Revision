@@ -1,7 +1,6 @@
 .services-container {
     width: 100vw;
     height: 100vh; 
-    border-radius: 10px;
     display: flex;
     box-sizing: border-box;
     margin: 0; 
@@ -28,12 +27,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #dee6e2;
-    border-radius: 12px;
+    background: #ffffff;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s ease;
+    box-shadow: 4px 4px 4px rgb(146, 146, 146);
 }
 
 .list-services button:hover {

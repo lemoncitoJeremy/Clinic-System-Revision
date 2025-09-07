@@ -25,25 +25,30 @@
     background-color: #ffffff; 
 }
 
-.left-section, .right-section{
-    width:50%;
-    height: 90%;
+.left-section{
+    width:70%;
     border: 1px solid;
-    border-radius: 10px;
     margin: 5px;
+    padding: 30px;
     background-color: #fff;
+    box-shadow: 4px 4px 4px rgb(146, 146, 146);
+}
+.right-section{
+    width:70%;
+    height: 55%;
+    border: 1px solid;
+    margin: 5px;
+    padding: 30px;
+    background-color: #fff;
+    display: flex;
+    
+    flex-direction: column;
     box-shadow: 4px 4px 4px rgb(146, 146, 146);
 }
 
 .left-section{
     display: flex;
     flex-direction: column;  
-}
-
-.right-section{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
 }
 
 .input-container {
@@ -55,7 +60,6 @@
     display: flex;
     gap:10px;
     padding:10px;
-    border-radius: 10px;
 }
 
 .info-field1, .info-field2 {
@@ -77,12 +81,19 @@
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #ccc;
-    border-radius: 6px;
     font-size: 14px;
     box-sizing: border-box;
 }
 .info-field2{
     gap: 5px;
+}
+
+.case-number{
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1px;
+    display: flex;
+    justify-content: center;
 }
 
 .gender-group {
@@ -115,7 +126,6 @@
   flex-direction: column;
   gap: 15px;
   padding: 15px;
-  border-radius: 10px;
 }
 
 .input-container2 .row {
@@ -137,7 +147,6 @@
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 6px;
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -146,13 +155,21 @@
   flex-direction: column;
 }
 
-
+.input-container2 select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff;
+  cursor: pointer;
+}
 
 .buttons{
-
     width: calc(100% -10px);
-    height: calc(40% / 3 - 20px);
-    margin: 10px;
+    height: 60px;
+    margin-bottom: 10px;
+    margin-top: 50px;
     gap:50px;
     display: flex;
     justify-content: center;
@@ -161,7 +178,6 @@
     width: 100px;
     height: 100%;
     border: solid 1px #000;
-    border-radius: 10px;
     cursor: pointer;
     background-color: rgb(239, 239, 239);
 }
