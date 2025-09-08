@@ -5,6 +5,7 @@ import Dashboard from "./pages/dashboard/dashboard";
 import FormPage from "./pages/form/form_page";
 import ProtectedRoute from './components/routeGuard/routeGuard';
 import ServicesPage from "./pages/services/services"
+import QueuePage from './pages/queue/queue';
 function App() {
 
   return (
@@ -25,6 +26,11 @@ function App() {
         <Route path="/services" element={
             <ProtectedRoute> 
             <ServicesPage/>
+            </ProtectedRoute>} 
+        />
+        <Route path="/queue" element={
+            <ProtectedRoute> 
+            <QueuePage/>
             </ProtectedRoute>} 
         />
       </Routes>

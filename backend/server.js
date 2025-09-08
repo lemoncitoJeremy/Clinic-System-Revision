@@ -27,6 +27,7 @@ class Server {
         this.SelectService();
         this.Checkcase();
         this.Createcase();
+        this.GetQueuedCases();
     }
 
     configureMiddleware() {
@@ -124,9 +125,7 @@ class Server {
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
                 if (results.length > 0) {
-                    console.log("old",results[0].case_id);
                     const genId = this.generateCaseId(results[0].case_id, service);
-                    console.log("Generated Case ID: ", genId);
                     res.json({ success: true, maxCaseId: genId });
                 } else {
                     const generatedCaseId = this.generateCaseId(null, service);
@@ -224,7 +223,27 @@ class Server {
                     );
                 });
 
-                res.json({ success: true, message: "Case created successfully" });
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.insertQueue,
+                        [
+                            case_Id, 
+                            firstname,
+                            middlename,
+                            lastname,             
+                            requestingPhysician,
+                            requestDate,
+                            serviceType,
+                            status
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                res.json({ success: true, message: "Case and queue entry created successfully" });
 
             } catch (error) {
                 console.error("Database error:", error);
@@ -232,6 +251,21 @@ class Server {
             }
         });
     }
+
+    GetQueuedCases() {
+        this.app.get("/queued-cases", (req, res) => {
+            const sql = dbQueries.queries.queuedCases;
+            console.log(sql);
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                console.log(results);
+                res.json({ success: true, queuedCases: results });
+            });
+        });
+    }   
 
     start() {
         this.app.listen(this.port, () => {

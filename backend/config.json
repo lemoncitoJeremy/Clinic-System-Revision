@@ -7,6 +7,7 @@
         "checkCase": "SELECT case_id FROM case_applications WHERE case_id LIKE ? ORDER BY case_id DESC LIMIT 1",
         "createCase": "INSERT INTO case_applications (case_id, firstname, middlename, lastname, birthdate, gender, email_address, mobile_number, address, patient_source, requesting_physician, request_date, exam_type, service_type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         "retrievePhysicians": "SELECT physician_id FROM dim_physicians WHERE physician_name = ?",
-        "QueuedCases": "SELECT * FROM case_applications WHERE status = 'Pending' ORDER BY request_date ASC"
+        "insertQueue": "INSERT INTO queue_table (case_id, firstname, middlename, lastname, requesting_physician,request_date, service_type,status) VALUES (?,?,?,?,?,?,?,?);",
+        "queuedCases": "SELECT * FROM queue_table WHERE status = 'Pending' ORDER BY case_id ASC"
     }
 }

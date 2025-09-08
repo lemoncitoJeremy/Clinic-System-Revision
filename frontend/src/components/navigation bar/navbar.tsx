@@ -19,13 +19,12 @@ const navbar = () => {
         { isAdmin && (
           <>
             <a  onClick= {()=>navigate("/dashboard")} className="admin-only">My Dashboard</a>
-            <a  onClick= {()=>navigate("/records")} className="admin-only">Records</a>
             <a  onClick= {()=>navigate("/logs")} id="nav-logs" className="admin-only">Logs</a> 
+            <a  onClick= {()=>navigate("/records")} className="admin-only">Records</a>
+            <a onClick= {()=>navigate("/queue")}>Queue</a>
           </>
         )}
             <a onClick= {()=>navigate("/services")}>Services</a>
-            <a onClick= {()=>navigate("/queue")}>Queue</a>
-            <a onClick= {()=>navigate("/settings")}>Settings</a>
             <a onClick= {handleLogout}>Log Out</a>
     </nav>
   )
