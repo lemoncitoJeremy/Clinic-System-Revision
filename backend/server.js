@@ -28,6 +28,12 @@ class Server {
         this.Checkcase();
         this.Createcase();
         this.GetQueuedCases();
+        this.CheckPatientId();
+        this.RegisterPatient();
+        this.GetRegisteredPatients();
+        this.FetchPatientbyId();
+        this.RetrievePatientCases();
+        
     }
 
     configureMiddleware() {
@@ -107,12 +113,145 @@ class Server {
         });
     }
 
+    CheckPatientId() {
+        this.app.get("/check-patientId", (req, res) => {
+            const sql = dbQueries.queries.CheckPatientId;
+
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                if (results.length > 0) {
+                    const genId = this.GeneratePatientId(results[0].patient_id);
+                    res.json({ success: true, maxPatientId: genId });
+                } else {
+                    const generatedPatientId = this.GeneratePatientId(null);
+                    res.json({ success: true, maxPatientId: generatedPatientId });
+                    console.log("No Patient IDs found");
+                }
+            });
+        });
+    }
+
+    GeneratePatientId(maxPatientId) {
+        const date = new Date();
+        const yyyy = date.getFullYear().toString();
+        let sequenceNumber = 1;
+
+        if (maxPatientId) {
+            const regex = new RegExp(`^(${'PID'}${yyyy})(\\d{4})$`);
+            const match = maxPatientId.match(regex);
+
+            if (match) {
+                sequenceNumber = parseInt(match[2], 10) + 1;
+            }
+        }
+        
+        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        return `${"PID"}${yyyy}${sequenceStr}`;
+    }
+
+    RegisterPatient() {
+        this.app.post("/register-patient", async (req, res) => {
+            const {
+                patient_Id,
+                firstname,
+                middlename,
+                lastname,
+                birthdate,
+                gender,
+                email,
+                phone,
+                address,
+            } = req.body;
+
+            try {
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.RegisterPatient,
+                        [
+                            patient_Id,
+                            firstname,
+                            middlename,
+                            lastname,
+                            birthdate,
+                            gender,
+                            email,
+                            phone,
+                            address,
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                            res.json({ success: true, message: "Patient registered successfully" });
+                            console.log("Patient registered successfully");
+                        }
+                    );
+                });
+            } catch (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ success: false, error: error.message });
+            }
+        });
+    }
+
+    GetRegisteredPatients() {
+        this.app.get("/patients", (req, res) => {
+            const sql = dbQueries.queries.GetRegisteredPatients;
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                res.json({ success: true, RegisteredPatients: results });
+            });
+        });
+    }   
+
+    FetchPatientbyId() {
+        this.app.get("/patients/:id", (req, res) => {
+            const { id } = req.params;
+            const sql = "SELECT * FROM dim_patients WHERE patient_id = ?"; // 👈 inline test
+
+            if (!this.db) {
+                return res.status(500).json({ success: false, error: "Database not connected" });
+            }
+
+            this.db.query(sql, [id], (err, results) => {
+                if (err) {
+                console.error("MySQL Error:", err);
+                return res.status(500).json({ success: false, error: "Database error" });
+                }
+
+                if (!results || results.length === 0) {
+                return res.status(404).json({ success: false, message: "Patient not found" });
+                }
+
+                res.json({ success: true, RegisteredPatients: results[0] });
+            });
+            });
+        }
+    
+    RetrievePatientCases() {
+        this.app.get("/patients/:id/cases", (req, res) => {
+            const { id } = req.params;
+            const sql = dbQueries.queries.RetrievePatientCases;
+            this.db.query(sql, [id], (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                res.json({ success: true, PatientCases: results });
+            });
+        });
+    }
+
     Checkcase() {
         this.app.get("/check-case", (req, res) => {
             const sql = dbQueries.queries.checkCase;
             const { service } = req.query;
             let wildcard = null;
-
             if (service === "xray"){
                 wildcard = "%x%";
             } else {
@@ -125,10 +264,10 @@ class Server {
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
                 if (results.length > 0) {
-                    const genId = this.generateCaseId(results[0].case_id, service);
+                    const genId = this.GenerateCaseId(results[0].case_id, service);
                     res.json({ success: true, maxCaseId: genId });
                 } else {
-                    const generatedCaseId = this.generateCaseId(null, service);
+                    const generatedCaseId = this.GenerateCaseId(null, service);
                     res.json({ success: true, maxCaseId: generatedCaseId });
                     console.log("No case IDs found");
                 }
@@ -136,13 +275,12 @@ class Server {
         });
     }
 
-    generateCaseId(maxCaseId, service) {
+    GenerateCaseId(maxCaseId, service) {
         const date = new Date();
         const yyyy = date.getFullYear().toString();
         const mm = (date.getMonth() + 1).toString().padStart(2, '0');
         const dd = date.getDate().toString().padStart(2, '0');
         const datePrefix = `${yyyy}${mm}${dd}`;
-        console.log(datePrefix);
         // Pick service character
         const serviceChar = service.toLowerCase() === 'xray' ? 'x' : 'u';
 
@@ -165,22 +303,15 @@ class Server {
         this.app.post("/create-case", async (req, res) => {
             const {
                 case_Id,
-                firstname,
-                middlename,
-                lastname,
-                birthdate,
-                gender,
-                email,
-                phone,
-                address,
+                patientId,
                 patientSource,
                 requestingPhysician,
                 requestDate,
                 examType,
                 serviceType,
+                notes,
                 status
             } = req.body;
-
             try {
                 const physicianId = await new Promise((resolve, reject) => {
                     this.db.query(
@@ -201,19 +332,13 @@ class Server {
                         dbQueries.queries.createCase,
                         [
                             case_Id,
-                            firstname,
-                            middlename,
-                            lastname,
-                            birthdate,
-                            gender,
-                            email,
-                            phone,
-                            address,
+                            patientId,
                             patientSource,
                             physicianId,
                             requestDate,
                             examType,
                             serviceType,
+                            notes,
                             status
                         ],
                         (err, results) => {
@@ -227,10 +352,7 @@ class Server {
                     this.db.query(
                         dbQueries.queries.insertQueue,
                         [
-                            case_Id, 
-                            firstname,
-                            middlename,
-                            lastname,             
+                            case_Id,             
                             requestingPhysician,
                             requestDate,
                             serviceType,
@@ -251,17 +373,15 @@ class Server {
             }
         });
     }
-
+    
     GetQueuedCases() {
         this.app.get("/queued-cases", (req, res) => {
             const sql = dbQueries.queries.queuedCases;
-            console.log(sql);
             this.db.query(sql, (err, results) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
-                console.log(results);
                 res.json({ success: true, queuedCases: results });
             });
         });

@@ -6,8 +6,8 @@
 
 .navigation-panel{
      height: 100%;
-     width: 150px;
-     background-color: #f0f0f0;
+     width: 200px;
+     background-color: #a82525;
 }
 
 .content-section {
@@ -19,34 +19,131 @@
 .divider {
     display: flex;
     flex-direction: column;
-    
     flex: 1;
     overflow: hidden;
 }
-
-.main-content {
-    padding: 30px;
-    height: 20vh;
-    border: 1px solid #adacac;
-}
-
-.sub-content {
+.hder-add-patient{
     display: flex;
-    flex-direction: column;
-    height: calc(100vh - 20vh);
-}
-
-.container-2, .container-3 {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid #adacac;
+    justify-content: space-between;
+    align-items: center;
 
 }
+.dash-btn{
+    display: flex;
+    gap:10px;
+}
+.dash-btn button{
+    background-color: #14532d; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.kpi-section {
+    padding: 30px;
+    height: 25vh;
+}
 
-.container-4 {
-    width: 35vw;
-    height: 100vh;
+.kpi-cards {
+  display: flex;
+  gap: 20px;
+}
+
+.kpi-card {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  text-align: left;
+}
+
+.kpi-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.kpi-card h2 {
+  margin-top: 10px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #111;
+}
+
+.task-queue-table {
+    background-color: #ffffff;
     padding: 20px;
+    height: 80vh;
+
     overflow-y: auto;
-    border: 1px solid #adacac;
+}
+
+
+.task-queue-table table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* ensures even column widths */
+}
+
+.task-queue-table th,
+.task-queue-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  word-wrap: break-word; /* prevents overflow */
+}
+
+.task-queue-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.task-queue-table tr:nth-child(even) {
+  background-color: #fafafa; /* subtle striped rows */
+}
+
+.task-queue-table tr:hover {
+  background-color: #f1f1f1; /* highlight on hover */
+}
+
+.task-queue-table {
+  background-color: #ffffff;
+  padding: 30px;
+  height: 80vh;
+  border: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Pending / Waiting */
+.status-badge.pending,
+.status-badge.waiting {
+  background-color: #ffe6f1;
+  color: #d63384;
+}
+
+/* Completed */
+.status-badge.completed {
+  background-color: #d9f7e5;
+  color: #1e7e34;
+}
+
+/* Cancelled */
+.status-badge.cancelled {
+  background-color: #e9ecef;
+  color: #6c757d;
 }

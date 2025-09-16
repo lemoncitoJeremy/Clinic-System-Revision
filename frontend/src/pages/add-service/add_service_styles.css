@@ -1,0 +1,101 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* ✅ removes scrollbars */
+}
+
+.add-s-navigation{
+    width: 200px;
+    background-color: #f0f0f0;
+}
+
+.add-service-container {
+  display: flex;
+  height: 100%;
+}
+
+
+
+.nav-side {
+  width: 200px;
+}
+
+.add-service-content {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 20px;
+  flex: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-left, .form-right {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notes-section {
+  grid-column: span 2; /* makes Notes full width */
+}
+
+.form-section {
+  margin-bottom: 15px;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;    
+  gap: 10px;
+  
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 14px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 14px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}

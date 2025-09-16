@@ -5,9 +5,14 @@
         "selectService": "SELECT * FROM dim_service_exams WHERE service_type = ?",
         "registeredPhysicians": "SELECT * FROM dim_physicians",
         "checkCase": "SELECT case_id FROM case_applications WHERE case_id LIKE ? ORDER BY case_id DESC LIMIT 1",
-        "createCase": "INSERT INTO case_applications (case_id, firstname, middlename, lastname, birthdate, gender, email_address, mobile_number, address, patient_source, requesting_physician, request_date, exam_type, service_type, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "createCase": "INSERT INTO case_applications (case_id, patient_id, patient_source, requesting_physician, request_date, exam_type, service_type, notes, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         "retrievePhysicians": "SELECT physician_id FROM dim_physicians WHERE physician_name = ?",
-        "insertQueue": "INSERT INTO queue_table (case_id, firstname, middlename, lastname, requesting_physician,request_date, service_type,status) VALUES (?,?,?,?,?,?,?,?);",
-        "queuedCases": "SELECT * FROM queue_table WHERE status = 'Pending' ORDER BY case_id ASC"
+        "insertQueue": "INSERT INTO queue_table (case_id, requesting_physician,request_date, service_type,status) VALUES (?,?,?,?,?);",
+        "queuedCases": "SELECT * FROM queue_table WHERE status = 'Pending' ORDER BY case_id ASC",
+        "CheckPatientId": "SELECT patient_id FROM dim_patients WHERE patient_id LIKE 'PID%' ORDER BY patient_id DESC LIMIT 1",
+        "RegisterPatient": "INSERT INTO dim_patients (patient_id, firstname, middlename, lastname, birthdate, gender, email_address, mobile_number, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)",
+        "GetRegisteredPatients": "SELECT * FROM dim_patients ORDER BY patient_id ASC",
+        "GetPatientById": "SELECT * FROM dim_patients WHERE patient_id = ?",
+        "RetrievePatientCases": "SELECT c.case_id, c.patient_id, c.patient_source, p.physician_name AS requesting_physician, c.request_date, c.exam_type, c.service_type, c.notes, c.status\nFROM case_applications c\nLEFT JOIN dim_physicians p ON c.requesting_physician = p.physician_id\nWHERE c.patient_id = ?;"
     }
 }

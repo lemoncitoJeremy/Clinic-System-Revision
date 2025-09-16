@@ -1,29 +1,48 @@
 nav.navbar {
     height: 100vh;
-    width: 150px;
+    width: 200px;
     position: fixed;
     top: 0;
     left: 0;
     background-color: #dee6e2;
-    padding-top: 5px;
-    border-right: 1px solid ;
+    padding-top: 10px;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-
+.logo{
+    display: flex;
+    justify-content: center;
+}
+.nav-icon {
+  width: 20px;          /* force same width */
+  height: 20px;         /* force same height */
+  flex-shrink: 0;       /* prevent shrinking */
+  object-fit: contain;  /* keep aspect ratio */
+}
 .admin-only {
     display: block;
 }
 nav.navbar a {
-    height: 40px;
-    display: block;
-    color: black;
-    padding: 12px;
-    text-decoration: none;
-    transition: background-color 0.3s;
-    border-bottom: 1px solid #c1bfbf;
-    text-align: center;
-    align-content: center;
+  display: flex;              /* flex layout */
+  align-items: center;        /* center vertically */
+  gap: 14px;                  /* 👈 space between icon and text */
+  height: 45px;
+  color: black;
+  padding: 0 16px;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.bottom-portion {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
 }
 
 nav.navbar a:hover {
     background-color: #a2cfb8;
 }
+
