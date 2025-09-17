@@ -13,6 +13,7 @@
         "RegisterPatient": "INSERT INTO dim_patients (patient_id, firstname, middlename, lastname, birthdate, gender, email_address, mobile_number, address) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)",
         "GetRegisteredPatients": "SELECT * FROM dim_patients ORDER BY patient_id ASC",
         "GetPatientById": "SELECT * FROM dim_patients WHERE patient_id = ?",
-        "RetrievePatientCases": "SELECT c.case_id, c.patient_id, c.patient_source, p.physician_name AS requesting_physician, c.request_date, c.exam_type, c.service_type, c.notes, c.status\nFROM case_applications c\nLEFT JOIN dim_physicians p ON c.requesting_physician = p.physician_id\nWHERE c.patient_id = ?;"
+        "RetrievePatientCases": "SELECT c.case_id, c.patient_id, c.patient_source, p.physician_name AS requesting_physician, c.request_date, c.exam_type, c.service_type, c.notes, c.status\nFROM case_applications c\nLEFT JOIN dim_physicians p ON c.requesting_physician = p.physician_id\nWHERE c.patient_id = ?;",
+        "TotalPatientsRegistered":"SELECT COUNT(DISTINCT patient_id) AS total_patients FROM case_applications"
     }
 }

@@ -149,7 +149,7 @@ const AddService = () => {
                 value={formValues.serviceType}
                 onChange={handleInput}
               >
-                <option value="">-- Select --</option>
+                <option value="">-- Select an Option --</option>
                 <option value="xray">Xray</option>
                 <option value="ultrasound">Ultrasound</option>
               </select>
@@ -172,7 +172,7 @@ const AddService = () => {
               <select
                name="examType" value={formValues.examType} onChange={handleInput}
               >
-                <option value="" disabled hidden>-Select an Option-</option>
+                <option value="" disabled hidden>-- Select an Option --</option>
                     {exams.map((exam: string, idx: number) => (
                     <option key={idx} value={exam}>
                         {exam}
@@ -186,7 +186,7 @@ const AddService = () => {
               <select
                 name="requestingPhysician" value={formValues.requestingPhysician} onChange={handleInput}
               >
-                <option value="" disabled selected hidden>-Select an Option-</option>
+                <option value="" disabled selected hidden>-- Select an Option --</option>
                         {physicians.map((physician: string, idx: number) => (
                         <option key={idx} value={physician}>
                             {physician}
@@ -198,7 +198,7 @@ const AddService = () => {
             <div className="form-section">
               <label>Patient Source</label>
               <select name="patientSource" value={formValues.patientSource} onChange={handleInput}>
-                <option value="">-- Select --</option>
+                <option value="">-- Select an Option --</option>
                 <option>Walk-In</option>
                 <option>Referral</option>
               </select>
@@ -207,7 +207,7 @@ const AddService = () => {
         </div>
 
         <div className="form-section notes-section">
-          <label>Notes / Instructions</label>
+          <label>Notes</label>
           <textarea
             name="notes"
             value={formValues.notes}
