@@ -540,61 +540,111 @@ class Server {
         this.app.get("/reports/:id_report", async (req, res) => {
             const { id_report } = req.params;
             const caseId = id_report.replace("_report.pdf", "");
-
             const sql = dbQueries.queries.PDFReportData;
+            
             this.db.query(sql, [caseId], (err, results) => {
-            if (err || results.length === 0) {
-                console.error(err);
-                return res.status(500).json({ success: false, error: "Database error or case not found" });
-            }
+                if (err || results.length === 0) {
+                    console.error(err);
+                    return res.status(500).json(
+                        { success: false, error: "Database error or case not found" });
+                }
 
-            const data = results[0]; 
-            const outputPath = path.join(__dirname, `reports/${caseId}_report.pdf`);
+                const data = results[0]; 
 
-            if (!fs.existsSync(path.join(__dirname, 'reports'))) {
-                fs.mkdirSync(path.join(__dirname, 'reports'));
-            }
+                // const outputPath = path.join(__dirname, '../Records', `${caseId}_report.pdf`);
+                // if (!fs.existsSync(path.join(__dirname, '../Records'))) {
+                //     fs.mkdirSync(path.join(__dirname, '../Records'));
+                // }
 
-            const doc = new PDFDocument({ margin: 50 });
-            doc.pipe(fs.createWriteStream(outputPath));
-            doc.pipe(res);
+                const doc = new PDFDocument({ margin: 50 });
+                // doc.pipe(fs.createWriteStream(outputPath));
+                doc.pipe(res);
 
-            // HEADER
-            doc.fontSize(14).fillColor("green").text("A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
-            doc.fontSize(10).fillColor("black").text("027 Poblacion Sur, Talavera | 0960-6270-613 | asanglaymedicalanddiagnostic@gmail.com", { align: "center" });
-            doc.moveDown();
-            doc.fontSize(14).fillColor("black").text("RADIOLOGIC REPORT", { align: "center", underline: true });
-            doc.moveDown();
+                doc.fontSize(16).fillColor("#009a79").text(
+                    "A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
+                doc.fontSize(10).fillColor("black").text(
+                    "027 Poblacion Sur, Talavera | 0960-6270-613 | asanglaymedicalanddiagnostic@gmail.com",
+                    { align: "center" }
+                );
+                doc.fontSize(10).font("Helvetica-Bold").text(
+                    "Pablo Medical Clinic | www.pablomedicalclinic.com",
+                    { align: "center" }
+                );
+                doc.moveDown();
 
-            // PATIENT INFO
-            doc.fontSize(10).text(`Case ID: ${data.case_id}`);
-            doc.text(`Patient: ${data.patient_name}`);
-            doc.text(`Source: ${data.patient_source}`);
-            doc.text(`Physician: ${data.physician_name}`);
-            doc.text(`Request Date: ${new Date(data.request_date).toLocaleDateString()}`);
-            doc.text(`Exam Type: ${data.exam_type}`);
-            doc.text(`Service: ${data.service_type}`);
-            doc.moveDown();
+                //----
+                const reportTitle = data.service_type.toLowerCase() === "ultrasound" 
+                    ? "ULTRASOUND REPORT" 
+                    : "RADIOLOGIC REPORT";
 
-            // FINDINGS
-            doc.fontSize(11).text("FINDINGS:", { underline: true });
-            doc.fontSize(10).text(data.radiographic_findings, { align: "justify" });
-            doc.moveDown();
+                doc.fontSize(16).fillColor("black").text(
+                    reportTitle, { align: "center", underline: true });
+                doc.moveDown();
 
-            // IMPRESSIONS
-            doc.fontSize(11).fillColor("green").text("IMPRESSION:", { underline: true });
-            doc.fontSize(10).fillColor("black").text(data.radiographic_impressions, { align: "justify" });
-            doc.moveDown();
+                doc.fontSize(10).font("Helvetica-Bold").text(
+                    "Case ID: ", { continued: true });
+                doc.font("Helvetica").text(data.case_id);
 
-            // SIGNATURES
-            doc.moveDown();
-            doc.text("__________________________", { continued: true }).text("                __________________________");
-            doc.text(`${data.radio_technologist} (Radiologic Technologist)`, { continued: true }).text(`                ${data.radiologist} (Radiologist)`);
+                doc.font("Helvetica-Bold").text("Patient: ", { continued: true });
+                doc.font("Helvetica").text(data.patient_name);
 
-            doc.end();
+                doc.font("Helvetica-Bold").text("Source: ", { continued: true });
+                doc.font("Helvetica").text(data.patient_source);
+
+                doc.font("Helvetica-Bold").text("Physician: ", { continued: true });
+                doc.font("Helvetica").text(data.physician_name);
+
+                doc.font("Helvetica-Bold").text("Request Date: ", { continued: true });
+                doc.font("Helvetica").text(new Date(data.request_date).toLocaleDateString());
+
+                doc.font("Helvetica-Bold").text("Exam Type: ", { continued: true });
+                doc.font("Helvetica").text(data.exam_type);
+
+                doc.font("Helvetica-Bold").text("Service: ", { continued: true });
+                doc.font("Helvetica").text(data.service_type);
+                doc.moveDown();
+
+                //----
+                doc.font("Helvetica-Bold").fontSize(11).text("FINDINGS", { underline: true });
+                doc.moveDown(0.5); 
+                doc.font("Helvetica").fontSize(10).text(data.radiographic_findings, { align: "justify" });
+                doc.moveDown(2);
+
+                //----
+                doc.font("Helvetica-Bold").fontSize(11).fillColor("#009a79").text(
+                    "IMPRESSION", { underline: true });
+                doc.moveDown(0.5); 
+                doc.font("Helvetica").fontSize(10).fillColor("black").text(
+                    data.radiographic_impressions, { align: "justify" });
+                doc.moveDown(5);
+
+                //----
+                const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+                const halfWidth = pageWidth / 2;
+                const y = doc.y;
+                doc.text("__________________________", doc.page.margins.left, y, 
+                        { width: halfWidth, align: "center" });
+                doc.text("__________________________", doc.page.margins.left + halfWidth, y, 
+                        { width: halfWidth, align: "center" });
+                doc.moveDown();
+
+                //----
+                const y2 = doc.y;
+                doc.text(`${data.radio_technologist}`, doc.page.margins.left, y2, 
+                        { width: halfWidth, align: "center" });
+                doc.moveDown(0.3);
+                doc.text("Radiologic Technologist", doc.page.margins.left, doc.y, 
+                        { width: halfWidth, align: "center" });
+
+                doc.text(`${data.radiologist}`, doc.page.margins.left + halfWidth, y2, 
+                        { width: halfWidth, align: "center" });
+                doc.moveDown(0.3);
+                doc.text("Radiologist", doc.page.margins.left + halfWidth, doc.y, 
+                        { width: halfWidth, align: "center" });
+                doc.end();
             });
         });
-        }
+    }
 
     GetQueuedCases() {
         this.app.get("/queued-cases", (req, res) => {
