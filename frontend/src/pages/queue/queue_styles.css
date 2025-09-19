@@ -1,0 +1,142 @@
+.queue-container {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.queue-navigation-panel {
+  height: 100%;
+  width: 200px;
+  background-color: #a82525;
+}
+
+.queue-content-section {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.q-page-divider {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 30px;
+  background-color: #f9fafb;
+}
+
+.queue-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.queue-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 20px;
+  
+}
+
+.q-task-queue-table {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.q-task-queue-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.q-task-queue-table th,
+.q-task-queue-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.q-task-queue-table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.q-task-queue-table td {
+  font-size: 14px;
+  color: #111827;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.q-task-queue-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.q-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.q-status-badge.pending {
+  background-color: #ffe6f1;
+  color: #d63384;
+}
+
+.q-status-badge.completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.q-status-badge.cancelled {
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+
+.arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.arrow-btn:hover {
+  background-color: #f3f4f6; 
+}
+
+.arrow-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}

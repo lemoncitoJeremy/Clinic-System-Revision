@@ -1,0 +1,113 @@
+.p-r-navigation {
+  width: 200px;
+  background-color: #f0f0f0;
+}
+
+.records-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.p-r-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.p-r-tools{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.p-r-tools input{
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  width: 250px;
+}
+
+.p-r-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.p-r-header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.add-btn {
+  background-color: #14532d;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-btn:hover {
+  background-color: #166534;
+}
+
+.p-r-table {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 1rem;
+}
+
+.p-r-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.p-r-table th, .p-r-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+}
+
+.p-r-table th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
+}
+
+.p-r-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.p-r-pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.p-r-pagination button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.p-r-pagination button:hover {
+  background-color: #f3f4f6;
+}

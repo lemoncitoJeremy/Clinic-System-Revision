@@ -1,0 +1,201 @@
+.form-container {
+    width: 100vw;
+    height: 100vh; 
+    border-radius: 10px;
+    display: flex;
+    box-sizing: border-box;
+    margin: 0; 
+    padding: 0;
+    overflow: hidden;
+    
+}
+
+.patient-info-heading {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* stretch full width */
+    text-align: center;
+
+}
+
+.form-navigation-panel {
+   background-color: #252525;
+    width: 200px;
+   
+}
+.form-page {
+    width: calc(100vw - 150px);
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* stack heading on top */
+    align-items: center; 
+    padding: 10px;
+
+    
+}
+.form-body {
+    display: flex;
+    justify-content: center;
+    align-items:flex-start; /* make both columns equal height */
+    width: 100%;
+    
+    margin-bottom: 40px;
+    
+}
+
+.left-section,
+.right-section {
+    flex: 1;
+    border: 1px solid;
+    margin: 5px;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 4px 4px rgb(146, 146, 146);
+}
+
+.right-section {
+    justify-content: space-between; /* pushes buttons to bottom */
+}
+
+.left-section{
+    display: flex;
+    flex-direction: column;  
+}
+
+.input-container {
+    width: calc(100% - 20px);
+    height: calc(100% / 3 - 20px);
+    margin: 10px;
+    background-color: rgb(239, 239, 239);
+    box-sizing: border-box;
+    display: flex;
+    gap:10px;
+    padding:10px;
+}
+
+.info-field1, .info-field2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-field1 label, 
+.info-field2 label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.info-field1 input,
+.info-field2 input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.info-field2{
+    gap: 5px;
+}
+
+.case-number{
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1px;
+    display: flex;
+    justify-content: center;
+}
+
+.gender-group {
+    display: flex;
+    gap: 60px; 
+    align-items: center;
+    margin-top: 28px;
+    
+}
+
+.gender-group label {
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+}
+
+.gender-group input[type="radio"] {
+    transform: scale(1.5); 
+    cursor: pointer;
+}
+
+.input-container2 {
+  width: calc(100% - 20px);
+  margin: 10px;
+  
+  background-color: rgb(239, 239, 239);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+}
+
+.input-container2 .row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.input-container2 .row label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-container2 input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.input-container2 .row.full-width {
+  flex-direction: column;
+}
+
+.input-container2 select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.buttons{
+    width: calc(100% -10px);
+    height: 157px;
+    gap:50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn{
+    width: 100px;
+    height: 40px;
+    border: solid 1px #000;
+    cursor: pointer;
+    background-color: rgb(239, 239, 239);
+}
+

@@ -1,0 +1,163 @@
+.s-r-container {
+  display: flex;
+  height: 100vh; 
+  background: #f9fafb;
+  overflow: hidden;
+}
+
+.s-r-navigation {
+  width: 200px;
+  background-color: #f0f0f0;
+  flex-shrink: 0;
+}
+
+.s-r-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;  
+  height: 100%;       
+  box-sizing: border-box;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.record-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.record-header .patient-id {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.service-request {
+  background: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.findings{
+  background: white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.service-request h3, 
+.findings h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.request-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.request-table td {
+  padding: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.request-table td:first-child {
+  font-weight: 600;
+  color: #374151;
+  width: 200px;
+}
+
+.upload-findings {
+  margin-bottom: 1rem;
+}
+
+.file-link {
+  color: #14532d;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.findings-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 40px;
+  padding-bottom: 20px;
+}
+.findings-notes {
+  font-size: 0.95rem;
+  color: #414348;
+  margin-bottom: 1rem;
+}
+
+.btns{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.back-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.back-btn:hover {
+  background: #f3f4f6;
+}
+
+
+.s-r-form-section {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.s-r-form-section label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.s-r-form-section input,
+.s-r-form-section select,
+.s-r-form-section textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.file-export {
+  margin-top: 8px;
+  font-size: 14px;
+  padding-left: 10px;
+  color: #374151;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.file-export span {
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+.file-link {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}

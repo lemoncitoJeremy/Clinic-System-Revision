@@ -1,0 +1,52 @@
+nav.navbar {
+    height: 100vh;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #dee6e2;
+    padding-top: 10px;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logo{
+    display: flex;
+    justify-content: center;
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.admin-only {
+    display: block;
+}
+
+nav.navbar a {
+  display: flex;      
+  align-items: center;
+  gap: 14px;
+  height: 45px;
+  color: black;
+  padding: 0 16px;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.bottom-portion {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 50px;
+}
+
+nav.navbar a:hover {
+    background-color: #a2cfb8;
+}
+
