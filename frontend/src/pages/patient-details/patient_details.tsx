@@ -106,7 +106,7 @@ const PatientDetails = () => {
         <div className="p-d-services">
           <div className="service-header">
             <h3>Service History</h3>
-            <button className="add-btn" 
+            <button className="p-deets-add-btn" 
                     onClick={()=>{AddPatientService(patient.patient_id)}}>
                     + Add New Service
             </button>

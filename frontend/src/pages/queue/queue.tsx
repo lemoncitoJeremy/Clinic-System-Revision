@@ -65,7 +65,7 @@ const TaskQueue = () => {
         </div>
         <div className="q-page-divider">
           <h1 className="queue-title">Task Queue</h1>
-          <p className="queue-subtitle">Current Queue</p>
+          <p className="queue-subtitle"></p>
 
           <div className="q-task-queue-table">
             <table>

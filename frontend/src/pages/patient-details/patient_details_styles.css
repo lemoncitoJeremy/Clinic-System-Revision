@@ -83,8 +83,8 @@
     margin-bottom: 1rem;
   }
 
-  .add-btn {
-    background-color: #14532d;
+  .p-deets-add-btn {
+    background-color: #009a79;
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -92,8 +92,8 @@
     cursor: pointer;
   }
 
-  .add-btn:hover {
-    background-color: #166534;
+  .p-deets-add-btn:hover {
+    background-color: #66bba9;
   }
 
   .service-table table {
@@ -107,7 +107,6 @@
     font-size: 0.9rem;
   }
   .view-report {
-    color: #14532d;
     font-weight: 500;
     text-decoration: none;
   }
@@ -136,7 +135,7 @@
   }
 
   .view-report {
-    color: #14532d;
+    color: #009a79;
     text-decoration: underline;
     cursor: pointer;
   }

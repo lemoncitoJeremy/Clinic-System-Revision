@@ -36,29 +36,25 @@
 }
 
 .p-r-header h1 {
-  font-size: 1.8rem;
   font-weight: bold;
-  color: #333;
 }
 
 .add-btn {
-  background-color: #14532d;
+  background-color: #009a79;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 8px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
 .add-btn:hover {
-  background-color: #166534;
+  background-color: #66bba9;
 }
 
 .p-r-table {
   background: white;
-  border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 1rem;
 }

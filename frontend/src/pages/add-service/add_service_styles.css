@@ -92,10 +92,14 @@ textarea {
 }
 
 .submit-btn {
-  background: #2e7d32;
+  background: #009a79;
   color: white;
   border: none;
   padding: 14px 20px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #66bba9;
 }

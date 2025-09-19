@@ -85,7 +85,7 @@
 }
 
 .btn-save {
-  background-color: #14532d;
+  background-color: #009a79;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -103,7 +103,7 @@
 }
 
 .btn-save:hover {
-  background-color: #166534;
+  background-color: #66bba9;
 }
 
 .btn-cancel:hover {
