@@ -15,7 +15,7 @@ type Patient = {
 };
 
 type Service = {
-  case_id?: string;
+  case_id: string;
   exam_type:string;
   request_date: Date;
   requesting_physician: string;
@@ -26,50 +26,53 @@ type Service = {
 
 const PatientDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // 👈 capture patient_id from URL
+  const { id } = useParams(); 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [patientServices, setPatientServices] = useState<Service[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 3;
 
-    useEffect(() => {
-        const fetchPatientbyId = async () => {
-        try {
-            const res = await fetch(`http://localhost:3000/patients/${id}`);
-            const data = await res.json();
-            if (data.success) {
-            setPatient(data.RegisteredPatients);
-            }
-        } catch (err) {
-            console.error("Error fetching patients:", err);
-        }
-        };
-        fetchPatientbyId();
-    }, [id]);
+  useEffect(() => {
+      const fetchPatientbyId = async () => {
+      try {
+          const res = await fetch(`http://localhost:3000/patients/${id}`);
+          const data = await res.json();
+          if (data.success) {
+          setPatient(data.RegisteredPatients);
+          }
+      } catch (err) {
+          console.error("Error fetching patients:", err);
+      }
+      };
+      fetchPatientbyId();
+  }, [id]);
 
-    useEffect(() => {
-        const GetPatientCases = async () => {
-        try {
-            const res = await fetch(`http://localhost:3000/patients/${id}/cases`);
-            const data = await res.json();
-            if (data.success) {
-            console.log(data.PatientCases)
-            setPatientServices(data.PatientCases);
-            }
-        } catch (err) {
-            console.error("Error fetching patients:", err);
-        }
-        };
-        GetPatientCases();
-    }, [id]);
-
-
-  if (!patient) return <p>Loading...</p>;
+  useEffect(() => {
+      const GetPatientCases = async () => {
+      try {
+          const res = await fetch(`http://localhost:3000/patients/${id}/cases`);
+          const data = await res.json();
+          if (data.success) {
+          console.log(data.PatientCases)
+          setPatientServices(data.PatientCases);
+          }
+      } catch (err) {
+          console.error("Error fetching patients:", err);
+      }
+      };
+      GetPatientCases();
+  }, [id]);
 
   const AddPatientService = (id: string) => {
     navigate(`/patients/add-service/${id}`); 
   };
 
+  const HandleViewReport = (id: string) => {
+    navigate(`/patients/reports/${id}`);
+  }
+
+
+  if (!patient) return <p>Loading...</p>;
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -83,13 +86,11 @@ const PatientDetails = () => {
       </div>
 
       <div className="p-d-content">
-        {/* Patient Header */}
         <div className="p-d-header">
           <h1>Patient Details</h1>
           <button className="update-btn">Update Information</button>
         </div>
 
-        {/* Patient Details */}
         <div className="p-d-details">
           <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
           <p><strong>Patient ID:</strong> {patient.patient_id}</p>
@@ -105,7 +106,10 @@ const PatientDetails = () => {
         <div className="p-d-services">
           <div className="service-header">
             <h3>Service History</h3>
-            <button className="add-btn" onClick={()=>{AddPatientService(patient.patient_id)}}>+ Add New Service</button>
+            <button className="add-btn" 
+                    onClick={()=>{AddPatientService(patient.patient_id)}}>
+                    + Add New Service
+            </button>
           </div>
 
           <div className="service-table">
@@ -125,11 +129,15 @@ const PatientDetails = () => {
                   <tr key={idx}>
                     <td>{s.case_id}</td>
                     <td>{s.exam_type}</td>
-                    <td>{s.request_date ? new Date(s.request_date).toISOString().split("T")[0] : ""}</td>
+                    <td>
+                      {s.request_date ? new Date(s.request_date).toISOString().split("T")[0] : ""}
+                    </td>
                     <td>{s.requesting_physician}</td>
                     <td>{s.service_type}</td>
                     <td>
-                        <a href={`/reports/${s.case_id}`} className="view-report">View Report</a>
+                        <a onClick={()=>{HandleViewReport(s.case_id)}} 
+                        className="view-report">
+                        View Report</a>
                     </td>
                   </tr>
                 ))}
@@ -140,8 +148,7 @@ const PatientDetails = () => {
           <div className="pagination">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-            >
+              disabled={currentPage === 1}>
               Previous
             </button>
             <span>
@@ -151,8 +158,7 @@ const PatientDetails = () => {
               onClick={() =>
                 setCurrentPage((p) => Math.min(p + 1, totalPages))
               }
-              disabled={currentPage === totalPages}
-            >
+              disabled={currentPage === totalPages}>
               Next
             </button>
           </div>

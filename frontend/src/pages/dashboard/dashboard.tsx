@@ -20,6 +20,7 @@ const Dashboard = () => {
   };
 
   const [queuedCases, setQueuedCases] = useState<QueuedCase[]>([]);
+  const [totalPatients, setTotalPatients] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 7;
 
@@ -36,6 +37,22 @@ const Dashboard = () => {
       }
     };
     fetchQueuedCases();
+  }, []);
+
+  useEffect(() => {
+    const fetchTotalPatients = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/total-patients");
+        const data = await res.json();
+        if (data.success) {
+          setTotalPatients(data.TotalPatients[0].total_patients);
+          console.log(data)
+        }
+      } catch (err) {
+        console.error("Error fetching total patients:", err);
+      }
+    };
+    fetchTotalPatients();
   }, []);
 
   // Pagination logic
@@ -62,14 +79,14 @@ const Dashboard = () => {
             <div className='hder-add-patient'>
               <h1 id="welcomeMessage">Dashboard</h1>
               <div className='dash-btn'>
-                <button id="viewQueueBtn">View Queue</button> 
+                <button id="viewQueueBtn" onClick={()=>{navigate('/queue')}}>View Queue</button> 
                 <button id="addPatientBtn" onClick={()=>{navigate('/add-patient')}}>Add Patient</button>
               </div> 
             </div>
             <div className="kpi-cards">
               <div className="kpi-card customer-count">
                 <p>Total patients Registered</p>
-                <h2>0</h2>
+                <h2>{totalPatients}</h2>
               </div>
               <div className="kpi-card task-count">
                 <p>Total tasks in queue</p>

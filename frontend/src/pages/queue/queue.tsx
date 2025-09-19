@@ -4,7 +4,7 @@ import './queue_styles.css';
 import { useNavigate } from 'react-router-dom';
 import ArrowIcon from "../../assets/Arrow.png"
 
-const Dashboard = () => {
+const TaskQueue = () => {
   const res_dict = sessionStorage.getItem('user');
   const navigate = useNavigate();
   const user_session_data = res_dict ? JSON.parse(res_dict)["data"] : null;
@@ -39,7 +39,6 @@ const Dashboard = () => {
     fetchQueuedCases();
   }, []);
 
-  // Pagination logic
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentRows = queuedCases.slice(indexOfFirstRow, indexOfLastRow);
@@ -54,8 +53,10 @@ const Dashboard = () => {
   };
 
   const handleRowClick = (caseId: string) => {
-    navigate(`/queued-case/${caseId}`);
+    navigate(`/patients/reports/${caseId}`);
+    
   };
+
   return (
     <div className="queue-container">
       <div className="queue-content-section">
@@ -117,7 +118,6 @@ const Dashboard = () => {
               </tbody>
             </table>
 
-            {/* Pagination */}
             <div className="pagination">
               <button onClick={handlePrevPage} disabled={currentPage === 1}>
                 Previous
@@ -136,4 +136,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default TaskQueue;

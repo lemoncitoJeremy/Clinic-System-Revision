@@ -33,7 +33,7 @@
     gap:10px;
 }
 .dash-btn button{
-    background-color: #14532d; /* Green */
+    background-color: #14532d;
     border: none;
     color: white;
     padding: 10px 20px;
@@ -88,7 +88,7 @@
 .task-queue-table table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* ensures even column widths */
+  table-layout: fixed;
 }
 
 .task-queue-table th,
@@ -96,7 +96,7 @@
   border: 1px solid #ddd;
   padding: 10px;
   text-align: center;
-  word-wrap: break-word; /* prevents overflow */
+  word-wrap: break-word;
 }
 
 .task-queue-table th {
@@ -105,11 +105,11 @@
 }
 
 .task-queue-table tr:nth-child(even) {
-  background-color: #fafafa; /* subtle striped rows */
+  background-color: #fafafa;
 }
 
 .task-queue-table tr:hover {
-  background-color: #f1f1f1; /* highlight on hover */
+  background-color: #f1f1f1;
 }
 
 .task-queue-table {
@@ -129,20 +129,17 @@
   text-align: center;
 }
 
-/* Pending / Waiting */
 .status-badge.pending,
 .status-badge.waiting {
   background-color: #ffe6f1;
   color: #d63384;
 }
 
-/* Completed */
 .status-badge.completed {
   background-color: #d9f7e5;
   color: #1e7e34;
 }
 
-/* Cancelled */
 .status-badge.cancelled {
   background-color: #e9ecef;
   color: #6c757d;

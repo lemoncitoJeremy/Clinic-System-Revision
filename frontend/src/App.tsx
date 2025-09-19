@@ -10,6 +10,7 @@ import AddPatient from './pages/add-patient/add_patient';
 import Records from './pages/patient-records/patient_records'; 
 import PatientDetails from './pages/patient-details/patient_details';
 import AddService from './pages/add-service/add_service';
+import ServiceRecord from './pages/service-record/service_record';
 function App() {
 
   return (
@@ -55,6 +56,11 @@ function App() {
         <Route path="/patients/add-service/:id" element={
             <ProtectedRoute>
               <AddService />
+            </ProtectedRoute>} 
+        />
+        <Route path="/patients/reports/:id" element={
+            <ProtectedRoute>
+              <ServiceRecord />
             </ProtectedRoute>} 
         />
       </Routes>

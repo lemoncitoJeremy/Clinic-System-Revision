@@ -11,23 +11,27 @@ nav.navbar {
     flex-direction: column;
     justify-content: space-between;
 }
+
 .logo{
     display: flex;
     justify-content: center;
 }
+
 .nav-icon {
-  width: 20px;          /* force same width */
-  height: 20px;         /* force same height */
-  flex-shrink: 0;       /* prevent shrinking */
-  object-fit: contain;  /* keep aspect ratio */
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
+
 .admin-only {
     display: block;
 }
+
 nav.navbar a {
-  display: flex;              /* flex layout */
-  align-items: center;        /* center vertically */
-  gap: 14px;                  /* 👈 space between icon and text */
+  display: flex;      
+  align-items: center;
+  gap: 14px;
   height: 45px;
   color: black;
   padding: 0 16px;
