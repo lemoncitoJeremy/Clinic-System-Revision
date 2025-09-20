@@ -4,6 +4,8 @@ import './dashboard_styles.css';
 import { useNavigate } from 'react-router-dom';
 import ArrowIcon from "../../assets/Arrow.png"
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 const Dashboard = () => {
   const res_dict = sessionStorage.getItem('user');
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchQueuedCases = async () => {
       try {
-        const res = await fetch("http://localhost:3000/queued-cases");
+        const res = await fetch(`http://${IP}/queued-cases`);
         const data = await res.json();
         if (data.success) {
           setQueuedCases(data.queuedCases);
@@ -43,7 +45,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalPatients = async () => {
       try {
-        const res = await fetch("http://localhost:3000/total-patients");
+        const res = await fetch(`http://${IP}/total-patients`);
         const data = await res.json();
         if (data.success) {
           setTotalPatients(data.TotalPatients[0].total_patients);

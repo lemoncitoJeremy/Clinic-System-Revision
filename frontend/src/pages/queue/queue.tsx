@@ -4,6 +4,8 @@ import './queue_styles.css';
 import { useNavigate } from 'react-router-dom';
 import ArrowIcon from "../../assets/Arrow.png"
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 const TaskQueue = () => {
   const res_dict = sessionStorage.getItem('user');
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const TaskQueue = () => {
   useEffect(() => {
     const fetchQueuedCases = async () => {
       try {
-        const res = await fetch("http://localhost:3000/queued-cases");
+        const res = await fetch(`http://${IP}/queued-cases`);
         const data = await res.json();
         if (data.success) {
           setQueuedCases(data.queuedCases);

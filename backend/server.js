@@ -23,6 +23,7 @@ class Server {
         this.app = express();
         this.port = port || 3000;
         this.db = null;
+        this.ip_address = process.env.VITE_SERVER_IP_ADD;
 
         this.configureMiddleware();
         this.initializeDatabase();
@@ -57,7 +58,8 @@ class Server {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            port: process.env.DB_PORT
+            port: process.env.DB_PORT,
+            
         });
 
         this.db.connect((err) => {
@@ -698,7 +700,7 @@ class Server {
 
     start() {
         this.app.listen(this.port, () => {
-            console.log(`Server running on http://localhost:${this.port}`);
+            console.log(`Server running on http://${this.ip_address}:${this.port}`);
         });
     }
 }

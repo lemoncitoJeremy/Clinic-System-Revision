@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/navigation bar/navbar";
 import "./patient_details_styles.css";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname: string;
   lastname: string;
@@ -36,7 +38,7 @@ const PatientDetails = () => {
   useEffect(() => {
       const fetchPatientbyId = async () => {
       try {
-          const res = await fetch(`http://localhost:3000/patients/${id}`);
+          const res = await fetch(`http://${IP}/patients/${id}`);
           const data = await res.json();
           if (data.success) {
           setPatient(data.RegisteredPatients);
@@ -51,7 +53,7 @@ const PatientDetails = () => {
   useEffect(() => {
       const GetPatientCases = async () => {
       try {
-          const res = await fetch(`http://localhost:3000/patients/${id}/cases`);
+          const res = await fetch(`http://${IP}/patients/${id}/cases`);
           const data = await res.json();
           if (data.success) {
           console.log(data.PatientCases)

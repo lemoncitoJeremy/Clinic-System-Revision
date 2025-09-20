@@ -4,6 +4,8 @@ import Navbar from "../../components/navigation bar/navbar";
 import "./add_service_styles.css";
 import axios from "axios";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname: string;
   lastname: string;
@@ -37,7 +39,7 @@ const AddService = () => {
   useEffect(() => {
     const fetchPatient = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/patients/${id}`);
+        const res = await fetch(`http://${IP}/patients/${id}`);
         const data = await res.json();
         if (data.success) {
           setPatient(data.RegisteredPatients);
@@ -57,7 +59,7 @@ const AddService = () => {
     const fetchMaxCaseId = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/check-case?service=${formValues.serviceType}`
+          `http://${IP}/check-case?service=${formValues.serviceType}`
         );
         const data = await response.json();
 
@@ -81,7 +83,7 @@ const AddService = () => {
 
   const handleDropdownData = async (service:String) => {
         try {
-        const res = await axios.get(`http://localhost:3000/selectService/${service}`);
+        const res = await axios.get(`http://${IP}/selectService/${service}`);
         const data = res.data;
         setDropdownData(data);
         // navigate("/forms", { state: { service, data } });
@@ -105,7 +107,7 @@ const AddService = () => {
         event.preventDefault();
         console.log(formValues)
         try {
-            const res = await axios.post("http://localhost:3000/create-case", {
+            const res = await axios.post(`http://${IP}/create-case`, {
                 ...formValues
             });
 

@@ -4,6 +4,8 @@ import PenIcon from "../../assets/Pen.png";
 import "./patient_records_styles.css";
 import { useNavigate } from "react-router-dom";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname?: string;
   middlename?: string;
@@ -24,7 +26,7 @@ const PatientRecords = () => {
   useEffect(() => {
     const fetchRegisteredPatients = async () => {
       try {
-        const res = await fetch("http://localhost:3000/patients");
+        const res = await fetch(`http://${IP}/patients`);
         const data = await res.json();
         if (data.success) {
           setPatients(data.RegisteredPatients);
@@ -42,7 +44,7 @@ const PatientRecords = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/search?Input=${searchInput}`);
+      const res = await fetch(`http://${IP}/search?Input=${searchInput}`);
       const data = await res.json();
       if (data.success) {
         console.log(data)
