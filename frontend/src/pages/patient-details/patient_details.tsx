@@ -21,6 +21,7 @@ type Service = {
   requesting_physician: string;
   service_type:string;
   findings?: string;
+  status:string;
   
 };
 
@@ -108,7 +109,7 @@ const PatientDetails = () => {
             <h3>Service History</h3>
             <button className="p-deets-add-btn" 
                     onClick={()=>{AddPatientService(patient.patient_id)}}>
-                    + Add New Service
+                    Add New Service
             </button>
           </div>
 
@@ -121,6 +122,7 @@ const PatientDetails = () => {
                   <th>Request Date</th>
                   <th>Physician</th>
                   <th>Service Type</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
@@ -134,6 +136,11 @@ const PatientDetails = () => {
                     </td>
                     <td>{s.requesting_physician}</td>
                     <td>{s.service_type}</td>
+                    <td>
+                      <span className={`service-status-badge ${s.status.toLowerCase()}`}>
+                          {s.status}
+                      </span>
+                    </td>
                     <td>
                         <a onClick={()=>{HandleViewReport(s.case_id)}} 
                         className="view-report">

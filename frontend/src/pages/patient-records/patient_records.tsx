@@ -17,6 +17,7 @@ const PatientRecords = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 8;
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -39,7 +40,20 @@ const PatientRecords = () => {
     navigate(`/patients/${id}`); 
   };
 
-  // Pagination logic
+  const handleSearch = async () => {
+    try {
+      const res = await fetch(`http://localhost:3000/search?Input=${searchInput}`);
+      const data = await res.json();
+      if (data.success) {
+        console.log(data)
+        setPatients(data.RegisteredPatients);
+        setCurrentPage(1);
+      }
+    } catch (err) {
+      console.error("Error searching patients:", err);
+    }
+  };
+
   const totalPages = Math.ceil(patients.length / recordsPerPage);
   const startIndex = (currentPage - 1) * recordsPerPage;
   const paginatedPatients = patients.slice(startIndex, startIndex + recordsPerPage);
@@ -61,8 +75,16 @@ const PatientRecords = () => {
         <div className="p-r-header">
           <h1>Patient Records</h1>
           <div className="p-r-tools">
-            <input type="text" placeholder="Search"></input>
-            <button className="add-btn" onClick={() => navigate('/add-patient')}>+ Add New Patient</button>
+            <input type="text" 
+                   placeholder="Search" 
+                   value={searchInput}
+                   onChange={(e) => setSearchInput(e.target.value)}
+                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}/>
+            
+            <button className="add-btn" 
+                    onClick={() => navigate('/add-patient')}>
+                    Add New Patient
+            </button>
           </div>
         </div>
 
@@ -81,7 +103,9 @@ const PatientRecords = () => {
               {paginatedPatients.length > 0 ? (
                 paginatedPatients.map((p) => (
                   <tr key={p.patient_id}>
-                    <td>{`${p.firstname || ""} ${p.middlename || ""} ${p.lastname || ""}`}</td>
+                    <td>
+                      {`${p.firstname || ""} ${p.middlename || ""} ${p.lastname || ""}`}
+                    </td>
                     <td>
                       {p.birthdate
                         ? new Date(p.birthdate).toLocaleDateString()
@@ -106,8 +130,7 @@ const PatientRecords = () => {
               )}
             </tbody>
           </table>
-
-          {/* Pagination controls */}
+          
           {patients.length > recordsPerPage && (
             <div className="p-r-pagination">
               <button onClick={handlePrev} disabled={currentPage === 1}>

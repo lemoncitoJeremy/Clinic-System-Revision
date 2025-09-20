@@ -43,6 +43,7 @@ class Server {
         this.CheckCaseStatus();
         this.GetPDFDataExport();
         this.GeneratePDFReport();
+        this.SearchPatients();
     }
 
     configureMiddleware() {
@@ -217,6 +218,31 @@ class Server {
             });
         });
     }   
+
+    SearchPatients() {
+        this.app.get("/search", (req, res) => {
+            let { Input } = req.query;
+            
+            if (!Input) {
+                return res.json({ success: true, RegisteredPatients: [] });
+            }
+
+            const likeSearch = `%${Input}%`;
+            const sql = dbQueries.queries.FilterPatientbySearch;
+
+            this.db.query(
+                sql,
+                [likeSearch, likeSearch, likeSearch, likeSearch],
+                (err, results) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).json({ success: false, error: "Database error" });
+                    }
+                    res.json({ success: true, RegisteredPatients: results });
+                }
+            );
+        });
+    }
 
     GetRegisteredRadiology(){
         this.app.get("/radiology", (req, res) => {
@@ -599,9 +625,7 @@ class Server {
 
                 doc.font("Helvetica-Bold").text("Exam Type: ", { continued: true });
                 doc.font("Helvetica").text(data.exam_type);
-
-                doc.font("Helvetica-Bold").text("Service: ", { continued: true });
-                doc.font("Helvetica").text(data.service_type);
+                
                 doc.moveDown();
 
                 //----

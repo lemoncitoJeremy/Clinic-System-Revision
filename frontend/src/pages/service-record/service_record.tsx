@@ -94,7 +94,7 @@ const ServiceRecord = () => {
 
             if (res.data.success) {
                 alert("Findings Uploaded Successfully!");
-                navigate(`/patients/reports/${id}`);
+                navigate(`/patients/${patient?.patient_id}`);
             } else {
                 alert("Failed to Upload Findings.");
             }

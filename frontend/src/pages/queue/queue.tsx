@@ -71,7 +71,7 @@ const TaskQueue = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Patient</th>
+                  <th>Case ID</th>
                   <th>Date</th>
                   <th>Service</th>
                   <th>Status</th>
