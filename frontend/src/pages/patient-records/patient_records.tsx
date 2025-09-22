@@ -75,17 +75,20 @@ const PatientRecords = () => {
       </div>
       <div className="p-r-content">
         <div className="p-r-header">
-          <h1>Patient Records</h1>
-          <div className="p-r-tools">
+          <div className="p-r-heading-inp">
+            <h1>Patient Records</h1>
             <input type="text" 
                    placeholder="Search" 
                    value={searchInput}
                    onChange={(e) => setSearchInput(e.target.value)}
                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}/>
+          </div>
+          
+          <div className="p-r-tools">
             
             <button className="add-btn" 
-                    onClick={() => navigate('/add-patient')}>
-                    Add New Patient
+                      onClick={() => navigate('/add-patient')}>
+                      Add New Patient
             </button>
           </div>
         </div>

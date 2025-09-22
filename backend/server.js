@@ -42,7 +42,6 @@ class Server {
         this.UploadFindings();
         this.GetPatientCount();
         this.CheckCaseStatus();
-        this.GetPDFDataExport();
         this.GeneratePDFReport();
         this.SearchPatients();
     }
@@ -152,7 +151,7 @@ class Server {
         let sequenceNumber = 1;
 
         if (maxPatientId) {
-            const regex = new RegExp(`^(${'PID'}${yyyy})(\\d{4})$`);
+            const regex = new RegExp(`^(${'PID'}${yyyy})(\\d{5})$`);
             const match = maxPatientId.match(regex);
 
             if (match) {
@@ -160,7 +159,7 @@ class Server {
             }
         }
         
-        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        const sequenceStr = sequenceNumber.toString().padStart(5, '0');
         return `${"PID"}${yyyy}${sequenceStr}`;
     }
 
@@ -362,9 +361,9 @@ class Server {
             const { service } = req.query;
             let wildcard = null;
             if (service === "xray"){
-                wildcard = "%x%";
+                wildcard = "%X%";
             } else {
-                wildcard = "%u%";
+                wildcard = "%U%";
             }
 
             this.db.query(sql, [wildcard], (err, results) => {
@@ -395,15 +394,15 @@ class Server {
         let sequenceNumber = 1; 
 
         if (maxCaseId) {
-            const regex = new RegExp(`^(${datePrefix}${serviceChar})(\\d{4})$`);
+            const regex = /(\d{5})$/;
             const match = maxCaseId.match(regex);
 
             if (match) {
-                sequenceNumber = parseInt(match[2], 10) + 1;
+                sequenceNumber = parseInt(match[1], 10) + 1;
             }
         }
         
-        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        const sequenceStr = sequenceNumber.toString().padStart(5, '0');
         return `${datePrefix}${serviceChar}${sequenceStr}`;
     }
 
@@ -420,20 +419,34 @@ class Server {
                 notes,
                 status
             } = req.body;
+
             try {
-                const physicianId = await new Promise((resolve, reject) => {
+                let physicianId;
+                const results = await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.retrievePhysicians,
                         [requestingPhysician],
                         (err, results) => {
                             if (err) return reject(err);
-                            if (results.length === 0) {
-                                return reject(new Error("Physician not found"));
-                            }
-                            resolve(results[0].physician_id);
+                            resolve(results);
                         }
                     );
                 });
+
+                if (results.length > 0) {
+                    physicianId = results[0].physician_id;
+                } else {
+                    physicianId = await new Promise((resolve, reject) => {
+                        this.db.query(
+                            dbQueries.queries.InsertManualPhysician, 
+                            [requestingPhysician],
+                            (err, insertResults) => {
+                                if (err) return reject(err);
+                                resolve(insertResults.insertId); 
+                            }
+                        );
+                    });
+                }
 
                 await new Promise((resolve, reject) => {
                     this.db.query(
@@ -460,7 +473,7 @@ class Server {
                     this.db.query(
                         dbQueries.queries.insertQueue,
                         [
-                            case_Id,             
+                            case_Id,
                             requestingPhysician,
                             requestDate,
                             serviceType,
@@ -494,6 +507,34 @@ class Server {
             } = req.body;
 
             try {
+                const radiologistId = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.RetrieveRadiologistbyName,
+                        [radiologist],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            if (results.length === 0) {
+                                return reject(new Error("Radiologist not found"));
+                            }
+                            resolve(results[0].radiologist_id);
+                        }
+                    );
+                });
+
+                const radioTechId = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.RetrieveRadioTechbyName,
+                        [radio_technologist],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            if (results.length === 0) {
+                                return reject(new Error("Radiologist not found"));
+                            }
+                            resolve(results[0].radio_tech_id);
+                        }
+                    );
+                });
+
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.UploadFindings,
@@ -501,8 +542,8 @@ class Server {
                             case_Id,
                             radiographic_findings,
                             radiographic_impressions,
-                            radiologist,
-                            radio_technologist,
+                            radiologistId,
+                            radioTechId,
                             status
                         ],
                         (err, results) => {
@@ -547,20 +588,6 @@ class Server {
                 console.error("Database error:", error);
                 res.status(500).json({ success: false, error: error.message });
             }
-        });
-    }
-
-    GetPDFDataExport(){
-        this.app.get("/patients/:id/cases/pdf-export", (req, res) => {
-            const { id } = req.params;
-            const sql = dbQueries.queries.PDFReportData;
-            this.db.query(sql, [id], (err, data_res) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ success: false, error: "Database error" });
-                }
-                res.json({ success: true, PdfData: data_res });
-            });
         });
     }
 
@@ -656,17 +683,47 @@ class Server {
 
                 //----
                 const y2 = doc.y;
-                doc.text(`${data.radio_technologist}`, doc.page.margins.left, y2, 
-                        { width: halfWidth, align: "center" });
-                doc.moveDown(0.3);
-                doc.text("Radiologic Technologist", doc.page.margins.left, doc.y, 
-                        { width: halfWidth, align: "center" });
 
-                doc.text(`${data.radiologist}`, doc.page.margins.left + halfWidth, y2, 
-                        { width: halfWidth, align: "center" });
+
+                doc.font("Helvetica-Bold");
+                doc.text(`${data.radio_tech_name}`, doc.page.margins.left, y2, {
+                width: halfWidth,
+                align: "center"
+                });
+                doc.moveDown(0.5);
+                doc.text(`${data.tech_medical_credentials}`, {
+                width: halfWidth,
+                align: "center"
+                });
+
+                doc.font("Helvetica"); 
                 doc.moveDown(0.3);
-                doc.text("Radiologist", doc.page.margins.left + halfWidth, doc.y, 
-                        { width: halfWidth, align: "center" });
+                doc.text("Radiologic Technologist", {
+                width: halfWidth,
+                align: "center"
+                });
+
+
+                const rightX = doc.page.margins.left + halfWidth;
+
+                doc.font("Helvetica-Bold");
+                doc.text(`${data.radiologist_name}`, rightX, y2, {
+                width: halfWidth,
+                align: "center"
+                });
+                doc.moveDown(0.5);
+                doc.text(`${data.radiologist_medical_credentials}`, rightX, doc.y, {
+                width: halfWidth,
+                align: "center"
+                });
+
+                doc.font("Helvetica");
+                doc.moveDown(0.3);
+                doc.text("Radiologist", rightX, doc.y, {
+                width: halfWidth,
+                align: "center"
+                });
+
                 doc.end();
             });
         });

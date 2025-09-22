@@ -14,12 +14,13 @@ type Patient = {
 
 const AddService = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // 👈 patient_id from URL
+  const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
 
   const [case_Id, setCaseId] = useState("");
   const [request_Date, setRequestDate] = useState("");
   const [dropdownData, setDropdownData] = useState<any>(null);
+  const [manualPhysician, setManualPhysician] = useState(false);
 
   const [formValues, setFormValues] = useState({
     case_Id: "",
@@ -185,17 +186,46 @@ const AddService = () => {
 
             <div className="form-section">
               <label>Requesting Physician</label>
-              <select
-                name="requestingPhysician" value={formValues.requestingPhysician} onChange={handleInput}
-              >
-                <option value="" disabled selected hidden>-- Select an Option --</option>
-                        {physicians.map((physician: string, idx: number) => (
-                        <option key={idx} value={physician}>
-                            {physician}
-                        </option>
-                        ))}
-              </select>
-            </div>
+              <div className="physician-btn" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                {!manualPhysician ? (
+                  <select
+                    name="requestingPhysician"
+                    value={formValues.requestingPhysician}
+                    onChange={handleInput}
+                  >
+                    <option value="" disabled hidden>
+                      -- Select an Option --
+                    </option>
+                    {physicians.map((physician: string, idx: number) => (
+                      <option key={idx} value={physician}>
+                        {physician}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="requestingPhysician"
+                    placeholder="Dr. "
+                    value={formValues.requestingPhysician}
+                    onChange={handleInput}
+                  />
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualPhysician((prev) => !prev);
+                    setFormValues((prev) => ({ ...prev, requestingPhysician: "" }));
+                  }}
+                  style={{
+                    
+                  }}
+                >
+                  {manualPhysician ? "-" : "+"}
+                </button>
+              </div>
+          </div>
 
             <div className="form-section">
               <label>Patient Source</label>

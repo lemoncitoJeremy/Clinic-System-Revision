@@ -4,7 +4,9 @@ import PatientsIcon from '../../assets/patient-records.png';
 import QueueIcon from '../../assets/tast-queue.png';
 import SettingsIcon from '../../assets/settings.png';
 import SupportIcon from '../../assets/support.png';
-import LogoutIcon from '../../assets/logout.png';
+import UpdateIcon from '../../assets/refresh-cw.png';
+import AnalyticsIcon from '../../assets/trending-up.png';
+import LogoutIcon from '../../assets/log-out.png';
 import './nav_styles.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -40,6 +42,14 @@ const Navbar = () => {
               <img src={QueueIcon} alt="Queue" className="nav-icon" />
               <span>Task Queue</span>
             </a>
+            <a onClick={() => navigate("/analytics")}>
+              <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
+              <span>Analytics</span>
+            </a>
+            <a onClick={() => navigate("/update-info")}>
+              <img src={UpdateIcon} alt="Update" className="nav-icon" />
+              <span>Update Info</span>
+        </a>
           </>
         )} 
       </div>
@@ -54,9 +64,9 @@ const Navbar = () => {
           <img src={SupportIcon} alt="Support" className="nav-icon" />
           <span>Support</span>
         </a> */}
-
+        
         <a onClick={handleLogout}>
-          <img src={LogoutIcon} alt="Logout" className="nav-" />
+          <img src={LogoutIcon} alt="Logout" className="nav-icon" />
           <span>Log Out</span>
         </a>
       </div>
