@@ -5,6 +5,8 @@ import ArrowDown from '../../assets/ArrowDown.png'
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Case = {
   patient_id: string;
   patient_source: string;
@@ -39,7 +41,7 @@ const ServiceRecord = () => {
   useEffect(() => {
           const fetchPatientbyId = async () => {
           try {
-              const res = await fetch(`http://localhost:3000/patients/${id}/s-rec`);
+              const res = await fetch(`http://${IP}/patients/${id}/s-rec`);
               const data = await res.json();
               if (data.success) {
               setPatient(data.RegisteredPatients);
@@ -54,7 +56,7 @@ const ServiceRecord = () => {
   useEffect(() => {
     const checkCaseStatus = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/patients/${id}/cases/status`);
+        const res = await fetch(`http://${IP}/patients/${id}/cases/status`);
         const data = await res.json();
         if (data.success) {
           setCaseStatus(data);
@@ -75,7 +77,7 @@ const ServiceRecord = () => {
 
   const handleDropdownData = async () => {
         try {
-        const res = await axios.get(`http://localhost:3000/radiology`);
+        const res = await axios.get(`http://${IP}/radiology`);
         const data = res.data;
         setRadiology(data);
         console.log("data",data)
@@ -88,13 +90,13 @@ const ServiceRecord = () => {
         event.preventDefault();
         console.log(formValues)
         try {
-            const res = await axios.post("http://localhost:3000/upload/findings", {
+            const res = await axios.post(`http://${IP}/upload/findings`, {
                 ...formValues
             });
 
             if (res.data.success) {
                 alert("Findings Uploaded Successfully!");
-                navigate(`/patients/reports/${id}`);
+                navigate(`/patients/${patient?.patient_id}`);
             } else {
                 alert("Failed to Upload Findings.");
             }
@@ -256,7 +258,7 @@ const ServiceRecord = () => {
                 <p className="file-label">Case Report Export File:</p>
                 <a
                   className="file-link"
-                  href={`http://localhost:3000/reports/${id}_report.pdf`}
+                  href={`http://${IP}/reports/${id}_report.pdf`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

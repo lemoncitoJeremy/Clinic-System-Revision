@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden; /* ✅ removes scrollbars */
+  overflow: hidden;
 }
 
 .add-s-navigation{
@@ -48,7 +48,7 @@ html, body {
 }
 
 .notes-section {
-  grid-column: span 2; /* makes Notes full width */
+  grid-column: span 2; 
 }
 
 .form-section {
@@ -69,6 +69,46 @@ html, body {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
+}
+
+
+.physician-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.physician-btn select,
+.physician-btn input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 10px; 
+  line-height: 1.4;
+  height: 38px;
+  box-sizing: border-box;
+}
+
+.physician-btn button {
+  background-color: #009a79;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 40px;
+  height: 39px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; 
+}
+
+.physician-btn button:hover {
+  background-color: #007a61;
 }
 
 textarea {
@@ -92,10 +132,14 @@ textarea {
 }
 
 .submit-btn {
-  background: #2e7d32;
+  background: #009a79;
   color: white;
   border: none;
   padding: 14px 20px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #66bba9;
 }

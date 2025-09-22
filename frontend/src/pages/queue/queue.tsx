@@ -4,6 +4,8 @@ import './queue_styles.css';
 import { useNavigate } from 'react-router-dom';
 import ArrowIcon from "../../assets/Arrow.png"
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 const TaskQueue = () => {
   const res_dict = sessionStorage.getItem('user');
   const navigate = useNavigate();
@@ -27,7 +29,7 @@ const TaskQueue = () => {
   useEffect(() => {
     const fetchQueuedCases = async () => {
       try {
-        const res = await fetch("http://localhost:3000/queued-cases");
+        const res = await fetch(`http://${IP}/queued-cases`);
         const data = await res.json();
         if (data.success) {
           setQueuedCases(data.queuedCases);
@@ -65,13 +67,13 @@ const TaskQueue = () => {
         </div>
         <div className="q-page-divider">
           <h1 className="queue-title">Task Queue</h1>
-          <p className="queue-subtitle">Current Queue</p>
+          <p className="queue-subtitle"></p>
 
           <div className="q-task-queue-table">
             <table>
               <thead>
                 <tr>
-                  <th>Patient</th>
+                  <th>Case ID</th>
                   <th>Date</th>
                   <th>Service</th>
                   <th>Status</th>

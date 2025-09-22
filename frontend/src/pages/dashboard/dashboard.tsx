@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import Navbar from '../../components/navigation bar/navbar';
 import './dashboard_styles.css';
 import { useNavigate } from 'react-router-dom';
+import ArrowIcon from "../../assets/Arrow.png"
+
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
 
 const Dashboard = () => {
   const res_dict = sessionStorage.getItem('user');
@@ -27,7 +30,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchQueuedCases = async () => {
       try {
-        const res = await fetch("http://localhost:3000/queued-cases");
+        const res = await fetch(`http://${IP}/queued-cases`);
         const data = await res.json();
         if (data.success) {
           setQueuedCases(data.queuedCases);
@@ -42,7 +45,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTotalPatients = async () => {
       try {
-        const res = await fetch("http://localhost:3000/total-patients");
+        const res = await fetch(`http://${IP}/total-patients`);
         const data = await res.json();
         if (data.success) {
           setTotalPatients(data.TotalPatients[0].total_patients);
@@ -56,16 +59,23 @@ const Dashboard = () => {
   }, []);
 
   // Pagination logic
-  const totalPages = Math.ceil(queuedCases.length / recordsPerPage);
-  const startIndex = (currentPage - 1) * recordsPerPage;
-  const paginatedCases = queuedCases.slice(startIndex, startIndex + recordsPerPage);
+  const rowsPerPage = 7;
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = queuedCases.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(queuedCases.length / rowsPerPage);
 
-  const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleRowClick = (caseId: string) => {
+    navigate(`/patients/reports/${caseId}`);
+    
   };
 
   return (
@@ -95,58 +105,68 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='task-queue-table'>
+          <div className="dash-q-task-queue-table">
             <table>
               <thead>
                 <tr>
                   <th>Case ID</th>
-                  <th>Requesting Physician</th>
-                  <th>Service Type</th>
+                  <th>Date</th>
+                  <th>Service</th>
                   <th>Status</th>
-                  <th>Request Date</th>
+                  <th>Physician</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                {paginatedCases.length > 0 ? (
-                  paginatedCases.map((caseItem, index) => (
+                {currentRows.length > 0 ? (
+                  currentRows.map((caseItem, index) => (
                     <tr key={index}>
-                      <td>{caseItem.case_id}</td>
-                      <td>{caseItem.requesting_physician}</td>
+                      <td>{`${caseItem.case_id}`}</td>
+                      <td>
+                        {caseItem.request_date
+                          ? new Date(caseItem.request_date).toLocaleDateString('en-GB', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: '2-digit',
+                            })
+                          : "-"}
+                      </td>
                       <td>{caseItem.service_type}</td>
                       <td>
-                        <span className={`status-badge ${caseItem.status.toLowerCase()}`}>
+                        <span className={`q-status-badge ${caseItem.status.toLowerCase()}`}>
                           {caseItem.status}
                         </span>
                       </td>
+                      <td>{caseItem.requesting_physician}</td>
                       <td>
-                        {caseItem.request_date
-                          ? new Date(caseItem.request_date).toLocaleDateString()
-                          : "-"}
+                        <a
+                          className="arrow-btn"
+                          onClick={() => handleRowClick(caseItem.case_id)}
+                        >
+                          <img src={ArrowIcon} alt="Arrow" className="arrow-icon" style={{ width: '15px', height: '15px' }} />
+                        </a>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={8}>No queued cases found.</td>
+                    <td colSpan={5}>No queued cases found.</td>
                   </tr>
                 )}
               </tbody>
             </table>
 
-            {/* Pagination Controls */}
-            {queuedCases.length > recordsPerPage && (
-              <div className="pagination-controls">
-                <button onClick={handlePrev} disabled={currentPage === 1}>
-                  Prev
-                </button>
-                <span>
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button onClick={handleNext} disabled={currentPage === totalPages}>
-                  Next
-                </button>
-              </div>
-            )}
+            <div className="dash-pagination">
+              <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

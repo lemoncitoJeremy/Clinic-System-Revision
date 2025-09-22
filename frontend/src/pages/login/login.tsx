@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import './login_styles.css'
 import Logo from '../../assets/logo2.png';
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+console.log(IP)
 function login() {
     
     const navigate = useNavigate();
@@ -19,7 +21,7 @@ function login() {
     async function handleLogin(event: any) {    
         event.preventDefault();
         try{
-            const res = await axios.post("http://localhost:3000/login", values);
+            const res = await axios.post(`http://${IP}/login`, values);
             if (res.data.success) {
                 const data = res.data;
                 sessionStorage.setItem('user', JSON.stringify({ data }));

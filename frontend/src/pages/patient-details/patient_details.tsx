@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/navigation bar/navbar";
 import "./patient_details_styles.css";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname: string;
   lastname: string;
@@ -21,6 +23,7 @@ type Service = {
   requesting_physician: string;
   service_type:string;
   findings?: string;
+  status:string;
   
 };
 
@@ -35,7 +38,7 @@ const PatientDetails = () => {
   useEffect(() => {
       const fetchPatientbyId = async () => {
       try {
-          const res = await fetch(`http://localhost:3000/patients/${id}`);
+          const res = await fetch(`http://${IP}/patients/${id}`);
           const data = await res.json();
           if (data.success) {
           setPatient(data.RegisteredPatients);
@@ -50,7 +53,7 @@ const PatientDetails = () => {
   useEffect(() => {
       const GetPatientCases = async () => {
       try {
-          const res = await fetch(`http://localhost:3000/patients/${id}/cases`);
+          const res = await fetch(`http://${IP}/patients/${id}/cases`);
           const data = await res.json();
           if (data.success) {
           console.log(data.PatientCases)
@@ -106,9 +109,9 @@ const PatientDetails = () => {
         <div className="p-d-services">
           <div className="service-header">
             <h3>Service History</h3>
-            <button className="add-btn" 
+            <button className="p-deets-add-btn" 
                     onClick={()=>{AddPatientService(patient.patient_id)}}>
-                    + Add New Service
+                    Add New Service
             </button>
           </div>
 
@@ -121,6 +124,7 @@ const PatientDetails = () => {
                   <th>Request Date</th>
                   <th>Physician</th>
                   <th>Service Type</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
@@ -134,6 +138,11 @@ const PatientDetails = () => {
                     </td>
                     <td>{s.requesting_physician}</td>
                     <td>{s.service_type}</td>
+                    <td>
+                      <span className={`service-status-badge ${s.status.toLowerCase()}`}>
+                          {s.status}
+                      </span>
+                    </td>
                     <td>
                         <a onClick={()=>{HandleViewReport(s.case_id)}} 
                         className="view-report">

@@ -4,6 +4,8 @@ import PenIcon from "../../assets/Pen.png";
 import "./patient_records_styles.css";
 import { useNavigate } from "react-router-dom";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname?: string;
   middlename?: string;
@@ -17,13 +19,14 @@ const PatientRecords = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const recordsPerPage = 8;
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRegisteredPatients = async () => {
       try {
-        const res = await fetch("http://localhost:3000/patients");
+        const res = await fetch(`http://${IP}/patients`);
         const data = await res.json();
         if (data.success) {
           setPatients(data.RegisteredPatients);
@@ -39,7 +42,20 @@ const PatientRecords = () => {
     navigate(`/patients/${id}`); 
   };
 
-  // Pagination logic
+  const handleSearch = async () => {
+    try {
+      const res = await fetch(`http://${IP}/search?Input=${searchInput}`);
+      const data = await res.json();
+      if (data.success) {
+        console.log(data)
+        setPatients(data.RegisteredPatients);
+        setCurrentPage(1);
+      }
+    } catch (err) {
+      console.error("Error searching patients:", err);
+    }
+  };
+
   const totalPages = Math.ceil(patients.length / recordsPerPage);
   const startIndex = (currentPage - 1) * recordsPerPage;
   const paginatedPatients = patients.slice(startIndex, startIndex + recordsPerPage);
@@ -59,10 +75,21 @@ const PatientRecords = () => {
       </div>
       <div className="p-r-content">
         <div className="p-r-header">
-          <h1>Patient Records</h1>
+          <div className="p-r-heading-inp">
+            <h1>Patient Records</h1>
+            <input type="text" 
+                   placeholder="Search" 
+                   value={searchInput}
+                   onChange={(e) => setSearchInput(e.target.value)}
+                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}/>
+          </div>
+          
           <div className="p-r-tools">
-            <input type="text" placeholder="Search"></input>
-            <button className="add-btn" onClick={() => navigate('/add-patient')}>+ Add New Patient</button>
+            
+            <button className="add-btn" 
+                      onClick={() => navigate('/add-patient')}>
+                      Add New Patient
+            </button>
           </div>
         </div>
 
@@ -81,7 +108,9 @@ const PatientRecords = () => {
               {paginatedPatients.length > 0 ? (
                 paginatedPatients.map((p) => (
                   <tr key={p.patient_id}>
-                    <td>{`${p.firstname || ""} ${p.middlename || ""} ${p.lastname || ""}`}</td>
+                    <td>
+                      {`${p.firstname || ""} ${p.middlename || ""} ${p.lastname || ""}`}
+                    </td>
                     <td>
                       {p.birthdate
                         ? new Date(p.birthdate).toLocaleDateString()
@@ -106,8 +135,7 @@ const PatientRecords = () => {
               )}
             </tbody>
           </table>
-
-          {/* Pagination controls */}
+          
           {patients.length > recordsPerPage && (
             <div className="p-r-pagination">
               <button onClick={handlePrev} disabled={currentPage === 1}>

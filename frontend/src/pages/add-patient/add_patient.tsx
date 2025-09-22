@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './add_patient_styles.css'
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 const add_patient = () => {
     const navigate = useNavigate();
     const [maxPatientId, setPatientId] = useState("");
@@ -19,12 +21,10 @@ const add_patient = () => {
         address: "",
     });
 
-
-
      useEffect(() => {
             const fetchMaxPatientId = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/check-patientId`);
+                const response = await fetch(`http://${IP}/check-patientId`);
                 const data = await response.json();
     
                 if (data.success) {
@@ -50,7 +50,7 @@ const add_patient = () => {
         event.preventDefault();
 
         try {
-            const res = await axios.post("http://localhost:3000/register-patient", {
+            const res = await axios.post(`http://${IP}/register-patient`, {
                 ...formValues
             });
 

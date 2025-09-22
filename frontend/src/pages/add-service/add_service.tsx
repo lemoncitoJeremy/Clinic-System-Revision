@@ -4,6 +4,8 @@ import Navbar from "../../components/navigation bar/navbar";
 import "./add_service_styles.css";
 import axios from "axios";
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
+
 type Patient = {
   firstname: string;
   lastname: string;
@@ -12,12 +14,13 @@ type Patient = {
 
 const AddService = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // 👈 patient_id from URL
+  const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
 
   const [case_Id, setCaseId] = useState("");
   const [request_Date, setRequestDate] = useState("");
   const [dropdownData, setDropdownData] = useState<any>(null);
+  const [manualPhysician, setManualPhysician] = useState(false);
 
   const [formValues, setFormValues] = useState({
     case_Id: "",
@@ -37,7 +40,7 @@ const AddService = () => {
   useEffect(() => {
     const fetchPatient = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/patients/${id}`);
+        const res = await fetch(`http://${IP}/patients/${id}`);
         const data = await res.json();
         if (data.success) {
           setPatient(data.RegisteredPatients);
@@ -57,7 +60,7 @@ const AddService = () => {
     const fetchMaxCaseId = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/check-case?service=${formValues.serviceType}`
+          `http://${IP}/check-case?service=${formValues.serviceType}`
         );
         const data = await response.json();
 
@@ -81,7 +84,7 @@ const AddService = () => {
 
   const handleDropdownData = async (service:String) => {
         try {
-        const res = await axios.get(`http://localhost:3000/selectService/${service}`);
+        const res = await axios.get(`http://${IP}/selectService/${service}`);
         const data = res.data;
         setDropdownData(data);
         // navigate("/forms", { state: { service, data } });
@@ -105,7 +108,7 @@ const AddService = () => {
         event.preventDefault();
         console.log(formValues)
         try {
-            const res = await axios.post("http://localhost:3000/create-case", {
+            const res = await axios.post(`http://${IP}/create-case`, {
                 ...formValues
             });
 
@@ -183,17 +186,46 @@ const AddService = () => {
 
             <div className="form-section">
               <label>Requesting Physician</label>
-              <select
-                name="requestingPhysician" value={formValues.requestingPhysician} onChange={handleInput}
-              >
-                <option value="" disabled selected hidden>-- Select an Option --</option>
-                        {physicians.map((physician: string, idx: number) => (
-                        <option key={idx} value={physician}>
-                            {physician}
-                        </option>
-                        ))}
-              </select>
-            </div>
+              <div className="physician-btn" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                {!manualPhysician ? (
+                  <select
+                    name="requestingPhysician"
+                    value={formValues.requestingPhysician}
+                    onChange={handleInput}
+                  >
+                    <option value="" disabled hidden>
+                      -- Select an Option --
+                    </option>
+                    {physicians.map((physician: string, idx: number) => (
+                      <option key={idx} value={physician}>
+                        {physician}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    name="requestingPhysician"
+                    placeholder="Dr. "
+                    value={formValues.requestingPhysician}
+                    onChange={handleInput}
+                  />
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setManualPhysician((prev) => !prev);
+                    setFormValues((prev) => ({ ...prev, requestingPhysician: "" }));
+                  }}
+                  style={{
+                    
+                  }}
+                >
+                  {manualPhysician ? "-" : "+"}
+                </button>
+              </div>
+          </div>
 
             <div className="form-section">
               <label>Patient Source</label>

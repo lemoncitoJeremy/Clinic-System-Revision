@@ -4,6 +4,7 @@ import Navbar from '../../components/navigation bar/navbar';
 import './form_styles.css';
 import axios from 'axios';
 
+const IP = import.meta.env.VITE_SERVER_IP_ADD;
 
 const form_page = () => {
     const location = useLocation();
@@ -33,7 +34,7 @@ const form_page = () => {
     useEffect(() => {
         const fetchMaxCaseId = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/check-case?service=${service}`);
+            const response = await fetch(`http://${IP}/check-case?service=${service}`);
             const data = await response.json();
 
             if (data.success) {
@@ -61,7 +62,7 @@ const form_page = () => {
 
         try {
             console.log("Submitting form with values:", formValues);
-            const res = await axios.post("http://localhost:3000/create-case", {
+            const res = await axios.post(`http://${IP}/create-case`, {
                 ...formValues
             });
 

@@ -23,6 +23,7 @@ class Server {
         this.app = express();
         this.port = port || 3000;
         this.db = null;
+        this.ip_address = process.env.VITE_SERVER_IP_ADD;
 
         this.configureMiddleware();
         this.initializeDatabase();
@@ -41,8 +42,8 @@ class Server {
         this.UploadFindings();
         this.GetPatientCount();
         this.CheckCaseStatus();
-        this.GetPDFDataExport();
         this.GeneratePDFReport();
+        this.SearchPatients();
     }
 
     configureMiddleware() {
@@ -56,7 +57,8 @@ class Server {
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_NAME,
-            port: process.env.DB_PORT
+            port: process.env.DB_PORT,
+            
         });
 
         this.db.connect((err) => {
@@ -149,7 +151,7 @@ class Server {
         let sequenceNumber = 1;
 
         if (maxPatientId) {
-            const regex = new RegExp(`^(${'PID'}${yyyy})(\\d{4})$`);
+            const regex = new RegExp(`^(${'PID'}${yyyy})(\\d{5})$`);
             const match = maxPatientId.match(regex);
 
             if (match) {
@@ -157,7 +159,7 @@ class Server {
             }
         }
         
-        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        const sequenceStr = sequenceNumber.toString().padStart(5, '0');
         return `${"PID"}${yyyy}${sequenceStr}`;
     }
 
@@ -217,6 +219,31 @@ class Server {
             });
         });
     }   
+
+    SearchPatients() {
+        this.app.get("/search", (req, res) => {
+            let { Input } = req.query;
+            
+            if (!Input) {
+                return res.json({ success: true, RegisteredPatients: [] });
+            }
+
+            const likeSearch = `%${Input}%`;
+            const sql = dbQueries.queries.FilterPatientbySearch;
+
+            this.db.query(
+                sql,
+                [likeSearch, likeSearch, likeSearch, likeSearch],
+                (err, results) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).json({ success: false, error: "Database error" });
+                    }
+                    res.json({ success: true, RegisteredPatients: results });
+                }
+            );
+        });
+    }
 
     GetRegisteredRadiology(){
         this.app.get("/radiology", (req, res) => {
@@ -334,9 +361,9 @@ class Server {
             const { service } = req.query;
             let wildcard = null;
             if (service === "xray"){
-                wildcard = "%x%";
+                wildcard = "%X%";
             } else {
-                wildcard = "%u%";
+                wildcard = "%U%";
             }
 
             this.db.query(sql, [wildcard], (err, results) => {
@@ -367,15 +394,15 @@ class Server {
         let sequenceNumber = 1; 
 
         if (maxCaseId) {
-            const regex = new RegExp(`^(${datePrefix}${serviceChar})(\\d{4})$`);
+            const regex = /(\d{5})$/;
             const match = maxCaseId.match(regex);
 
             if (match) {
-                sequenceNumber = parseInt(match[2], 10) + 1;
+                sequenceNumber = parseInt(match[1], 10) + 1;
             }
         }
         
-        const sequenceStr = sequenceNumber.toString().padStart(4, '0');
+        const sequenceStr = sequenceNumber.toString().padStart(5, '0');
         return `${datePrefix}${serviceChar}${sequenceStr}`;
     }
 
@@ -392,20 +419,34 @@ class Server {
                 notes,
                 status
             } = req.body;
+
             try {
-                const physicianId = await new Promise((resolve, reject) => {
+                let physicianId;
+                const results = await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.retrievePhysicians,
                         [requestingPhysician],
                         (err, results) => {
                             if (err) return reject(err);
-                            if (results.length === 0) {
-                                return reject(new Error("Physician not found"));
-                            }
-                            resolve(results[0].physician_id);
+                            resolve(results);
                         }
                     );
                 });
+
+                if (results.length > 0) {
+                    physicianId = results[0].physician_id;
+                } else {
+                    physicianId = await new Promise((resolve, reject) => {
+                        this.db.query(
+                            dbQueries.queries.InsertManualPhysician, 
+                            [requestingPhysician],
+                            (err, insertResults) => {
+                                if (err) return reject(err);
+                                resolve(insertResults.insertId); 
+                            }
+                        );
+                    });
+                }
 
                 await new Promise((resolve, reject) => {
                     this.db.query(
@@ -432,7 +473,7 @@ class Server {
                     this.db.query(
                         dbQueries.queries.insertQueue,
                         [
-                            case_Id,             
+                            case_Id,
                             requestingPhysician,
                             requestDate,
                             serviceType,
@@ -466,6 +507,34 @@ class Server {
             } = req.body;
 
             try {
+                const radiologistId = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.RetrieveRadiologistbyName,
+                        [radiologist],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            if (results.length === 0) {
+                                return reject(new Error("Radiologist not found"));
+                            }
+                            resolve(results[0].radiologist_id);
+                        }
+                    );
+                });
+
+                const radioTechId = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.RetrieveRadioTechbyName,
+                        [radio_technologist],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            if (results.length === 0) {
+                                return reject(new Error("Radiologist not found"));
+                            }
+                            resolve(results[0].radio_tech_id);
+                        }
+                    );
+                });
+
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.UploadFindings,
@@ -473,8 +542,8 @@ class Server {
                             case_Id,
                             radiographic_findings,
                             radiographic_impressions,
-                            radiologist,
-                            radio_technologist,
+                            radiologistId,
+                            radioTechId,
                             status
                         ],
                         (err, results) => {
@@ -522,79 +591,143 @@ class Server {
         });
     }
 
-    GetPDFDataExport(){
-        this.app.get("/patients/:id/cases/pdf-export", (req, res) => {
-            const { id } = req.params;
-            const sql = dbQueries.queries.PDFReportData;
-            this.db.query(sql, [id], (err, data_res) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).json({ success: false, error: "Database error" });
-                }
-                res.json({ success: true, PdfData: data_res });
-            });
-        });
-    }
-
     GeneratePDFReport() {
         this.app.get("/reports/:id_report", async (req, res) => {
             const { id_report } = req.params;
             const caseId = id_report.replace("_report.pdf", "");
-
             const sql = dbQueries.queries.PDFReportData;
+            
             this.db.query(sql, [caseId], (err, results) => {
-            if (err || results.length === 0) {
-                console.error(err);
-                return res.status(500).json({ success: false, error: "Database error or case not found" });
-            }
+                if (err || results.length === 0) {
+                    console.error(err);
+                    return res.status(500).json(
+                        { success: false, error: "Database error or case not found" });
+                }
 
-            const data = results[0]; 
-            const outputPath = path.join(__dirname, `reports/${caseId}_report.pdf`);
+                const data = results[0]; 
 
-            if (!fs.existsSync(path.join(__dirname, 'reports'))) {
-                fs.mkdirSync(path.join(__dirname, 'reports'));
-            }
+                // const outputPath = path.join(__dirname, '../Records', `${caseId}_report.pdf`);
+                // if (!fs.existsSync(path.join(__dirname, '../Records'))) {
+                //     fs.mkdirSync(path.join(__dirname, '../Records'));
+                // }
 
-            const doc = new PDFDocument({ margin: 50 });
-            doc.pipe(fs.createWriteStream(outputPath));
-            doc.pipe(res);
+                const doc = new PDFDocument({ margin: 50 });
+                // doc.pipe(fs.createWriteStream(outputPath));
+                doc.pipe(res);
 
-            // HEADER
-            doc.fontSize(14).fillColor("green").text("A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
-            doc.fontSize(10).fillColor("black").text("027 Poblacion Sur, Talavera | 0960-6270-613 | asanglaymedicalanddiagnostic@gmail.com", { align: "center" });
-            doc.moveDown();
-            doc.fontSize(14).fillColor("black").text("RADIOLOGIC REPORT", { align: "center", underline: true });
-            doc.moveDown();
+                doc.fontSize(16).fillColor("#009a79").text(
+                    "A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
+                doc.fontSize(10).fillColor("black").text(
+                    "027 Poblacion Sur, Talavera | 0960-6270-613 | asanglaymedicalanddiagnostic@gmail.com",
+                    { align: "center" }
+                );
+                doc.fontSize(10).font("Helvetica-Bold").text(
+                    "Pablo Medical Clinic | www.pablomedicalclinic.com",
+                    { align: "center" }
+                );
+                doc.moveDown();
 
-            // PATIENT INFO
-            doc.fontSize(10).text(`Case ID: ${data.case_id}`);
-            doc.text(`Patient: ${data.patient_name}`);
-            doc.text(`Source: ${data.patient_source}`);
-            doc.text(`Physician: ${data.physician_name}`);
-            doc.text(`Request Date: ${new Date(data.request_date).toLocaleDateString()}`);
-            doc.text(`Exam Type: ${data.exam_type}`);
-            doc.text(`Service: ${data.service_type}`);
-            doc.moveDown();
+                //----
+                const reportTitle = data.service_type.toLowerCase() === "ultrasound" 
+                    ? "ULTRASOUND REPORT" 
+                    : "RADIOLOGIC REPORT";
 
-            // FINDINGS
-            doc.fontSize(11).text("FINDINGS:", { underline: true });
-            doc.fontSize(10).text(data.radiographic_findings, { align: "justify" });
-            doc.moveDown();
+                doc.fontSize(16).fillColor("black").text(
+                    reportTitle, { align: "center", underline: true });
+                doc.moveDown();
 
-            // IMPRESSIONS
-            doc.fontSize(11).fillColor("green").text("IMPRESSION:", { underline: true });
-            doc.fontSize(10).fillColor("black").text(data.radiographic_impressions, { align: "justify" });
-            doc.moveDown();
+                doc.fontSize(10).font("Helvetica-Bold").text(
+                    "Case ID: ", { continued: true });
+                doc.font("Helvetica").text(data.case_id);
 
-            // SIGNATURES
-            doc.moveDown();
-            doc.text("__________________________", { continued: true }).text("                __________________________");
-            doc.text(`${data.radio_technologist} (Radiologic Technologist)`, { continued: true }).text(`                ${data.radiologist} (Radiologist)`);
+                doc.font("Helvetica-Bold").text("Patient: ", { continued: true });
+                doc.font("Helvetica").text(data.patient_name);
 
-            doc.end();
+                doc.font("Helvetica-Bold").text("Source: ", { continued: true });
+                doc.font("Helvetica").text(data.patient_source);
+
+                doc.font("Helvetica-Bold").text("Physician: ", { continued: true });
+                doc.font("Helvetica").text(data.physician_name);
+
+                doc.font("Helvetica-Bold").text("Request Date: ", { continued: true });
+                doc.font("Helvetica").text(new Date(data.request_date).toLocaleDateString());
+
+                doc.font("Helvetica-Bold").text("Exam Type: ", { continued: true });
+                doc.font("Helvetica").text(data.exam_type);
+                
+                doc.moveDown();
+
+                //----
+                doc.font("Helvetica-Bold").fontSize(11).text("FINDINGS", { underline: true });
+                doc.moveDown(0.5); 
+                doc.font("Helvetica").fontSize(10).text(data.radiographic_findings, { align: "justify" });
+                doc.moveDown(2);
+
+                //----
+                doc.font("Helvetica-Bold").fontSize(11).fillColor("#009a79").text(
+                    "IMPRESSION", { underline: true });
+                doc.moveDown(0.5); 
+                doc.font("Helvetica").fontSize(10).fillColor("black").text(
+                    data.radiographic_impressions, { align: "justify" });
+                doc.moveDown(5);
+
+                //----
+                const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
+                const halfWidth = pageWidth / 2;
+                const y = doc.y;
+                doc.text("__________________________", doc.page.margins.left, y, 
+                        { width: halfWidth, align: "center" });
+                doc.text("__________________________", doc.page.margins.left + halfWidth, y, 
+                        { width: halfWidth, align: "center" });
+                doc.moveDown();
+
+                //----
+                const y2 = doc.y;
+
+
+                doc.font("Helvetica-Bold");
+                doc.text(`${data.radio_tech_name}`, doc.page.margins.left, y2, {
+                width: halfWidth,
+                align: "center"
+                });
+                doc.moveDown(0.5);
+                doc.text(`${data.tech_medical_credentials}`, {
+                width: halfWidth,
+                align: "center"
+                });
+
+                doc.font("Helvetica"); 
+                doc.moveDown(0.3);
+                doc.text("Radiologic Technologist", {
+                width: halfWidth,
+                align: "center"
+                });
+
+
+                const rightX = doc.page.margins.left + halfWidth;
+
+                doc.font("Helvetica-Bold");
+                doc.text(`${data.radiologist_name}`, rightX, y2, {
+                width: halfWidth,
+                align: "center"
+                });
+                doc.moveDown(0.5);
+                doc.text(`${data.radiologist_medical_credentials}`, rightX, doc.y, {
+                width: halfWidth,
+                align: "center"
+                });
+
+                doc.font("Helvetica");
+                doc.moveDown(0.3);
+                doc.text("Radiologist", rightX, doc.y, {
+                width: halfWidth,
+                align: "center"
+                });
+
+                doc.end();
             });
         });
-        }
+    }
 
     GetQueuedCases() {
         this.app.get("/queued-cases", (req, res) => {
@@ -624,7 +757,7 @@ class Server {
 
     start() {
         this.app.listen(this.port, () => {
-            console.log(`Server running on http://localhost:${this.port}`);
+            console.log(`Server running on http://${this.ip_address}:${this.port}`);
         });
     }
 }
