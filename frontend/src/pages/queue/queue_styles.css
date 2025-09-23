@@ -39,7 +39,7 @@
   background-color: #ffffff;
   padding: 20px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .q-task-queue-table table {

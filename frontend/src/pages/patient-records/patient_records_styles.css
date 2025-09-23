@@ -62,6 +62,7 @@
 
 .p-r-table {
   background: white;
+  border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 1rem;
 }

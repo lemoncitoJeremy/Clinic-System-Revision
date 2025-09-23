@@ -37,6 +37,7 @@ const ServiceRecord = () => {
   const [patient, setPatient] = useState<Case | null>(null);
   const [caseStatus, setCaseStatus] = useState<CaseStatus | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
   
   useEffect(() => {
           const fetchPatientbyId = async () => {
@@ -95,14 +96,14 @@ const ServiceRecord = () => {
             });
 
             if (res.data.success) {
-                alert("Findings Uploaded Successfully!");
-                navigate(`/patients/${patient?.patient_id}`);
+                setModalMessage("Findings uploaded successfully!");
+                
             } else {
-                alert("Failed to Upload Findings.");
+                setModalMessage("Failed to Upload Findings.");
             }
         } catch (err) {
             console.error(err);
-            alert("An error occurred while Uploading the Findings.");
+            setModalMessage("An error occurred while Uploading the Findings.");
         }
     }
 
@@ -113,6 +114,13 @@ const ServiceRecord = () => {
     }));
   };
 
+  function closeModal() {
+        if (modalMessage === "Findings uploaded successfully!") {
+            navigate(`/patients/${patient?.patient_id}`);
+        }
+        setModalMessage(null);
+    }
+    
   const requestDate = patient?.request_date ? new Date(patient.request_date).toLocaleDateString() : ""  
   const Radiologist = radiology?.radiologist?.map((radiologist: { radiologist_name: string }) => 
                       radiologist.radiologist_name) || [];
@@ -186,6 +194,7 @@ const ServiceRecord = () => {
                     name="radiologist"
                     value={formValues.radiologist}
                     onChange={handleInput}
+                    required
                   >
                     <option value="">-- Select an Option --</option>
                     {Radiologist.map((r: string, idx: number) => (
@@ -200,6 +209,7 @@ const ServiceRecord = () => {
                     name="radio_technologist"
                     value={formValues.radio_technologist}
                     onChange={handleInput}
+                    required
                   >
                     <option value="">-- Select an Option --</option>
                     {RadioTech.map((t: any, idx: number) => (
@@ -215,6 +225,7 @@ const ServiceRecord = () => {
                     value={formValues.radiographic_findings}
                     onChange={handleInput}
                     placeholder="Enter a description..."
+                    required
                   />
                 </div>
 
@@ -225,11 +236,14 @@ const ServiceRecord = () => {
                     value={formValues.radiographic_impressions}
                     onChange={handleInput}
                     placeholder="Enter a description..."
+                    required
                   />
                 </div>
 
                 <div className="btns">
-                  <button type="button" className="back-btn" onClick={() => navigate(-1)}>
+                  <button type="button" 
+                          className="back-btn" 
+                          onClick={() => navigate(-1)}>
                     Back to Patient Record
                   </button>
                   <button type="submit" className="back-btn">
@@ -269,6 +283,14 @@ const ServiceRecord = () => {
           </div>
         )}
       </div>
+      {modalMessage && (
+            <div className="modal-overlay">
+                <div className="modal-box">
+                    <p>{modalMessage}</p>
+                    <button onClick={closeModal}>OK</button>
+                </div>
+            </div>
+        )}
     </div>
   )};
 

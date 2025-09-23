@@ -77,14 +77,19 @@ class Server {
 
             this.db.query(sql, [username, password], (err, results) => {
                 if (err) {
-                    console.error('Database error:', err);
-                    return res.status(500).json({ success: false, message: 'Server error' });
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Internal server error' 
+                    });
                 }
 
-                if (results) {
+                if (results && results.length > 0) {
                     returnAccessDict(res, results);
                 } else {
-                    res.status(401).json({ success: false, message: 'Invalid credentials' });
+                    return res.status(401).json({ 
+                        success: false, 
+                        message: 'Wrong Username or Password' 
+                    });
                 }
             });
         });
@@ -118,9 +123,9 @@ class Server {
                 });
             })
             .catch(err => {
-                res.status(500).json({ error: err.message });
+                console.error("Database query error:", err);
+                res.status(500).json({ error: "Internal server error" });
             });
-
         });
     }
 
@@ -178,6 +183,27 @@ class Server {
             } = req.body;
 
             try {
+                const existingPatient = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.VerifyPatientRegistration,
+                        [firstname, middlename, lastname],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                if (existingPatient && existingPatient.length > 0) {
+                    return res.status(200).json({
+                        success: false,
+                        message: "Patient already exists",
+                        data: existingPatient[0],
+                    });
+                }
+
+                const normalizedEmail = email && email.trim() !== "" ? email : "N/A";
+
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.RegisterPatient,
@@ -188,21 +214,28 @@ class Server {
                             lastname,
                             birthdate,
                             gender,
-                            email,
+                            normalizedEmail,
                             phone,
                             address,
                         ],
                         (err, results) => {
                             if (err) return reject(err);
                             resolve(results);
-                            res.json({ success: true, message: "Patient registered successfully" });
-                            console.log("Patient registered successfully");
                         }
                     );
                 });
+
+                return res.status(201).json({
+                    success: true,
+                    message: "Patient registered successfully",
+                });
+
             } catch (error) {
                 console.error("Database error:", error);
-                res.status(500).json({ success: false, error: error.message });
+                return res.status(500).json({ 
+                    success: false, 
+                    error: "Internal server error" 
+                });
             }
         });
     }
@@ -448,6 +481,8 @@ class Server {
                     });
                 }
 
+                const normalizedNotes = notes && notes.trim() !== "" ? notes : "N/A";
+                
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.createCase,
@@ -459,7 +494,7 @@ class Server {
                             requestDate,
                             examType,
                             serviceType,
-                            notes,
+                            normalizedNotes,
                             status
                         ],
                         (err, results) => {

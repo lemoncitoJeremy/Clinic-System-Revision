@@ -20,26 +20,27 @@ const add_patient = () => {
         phone: "",
         address: "",
     });
+    const [modalMessage, setModalMessage] = useState<string | null>(null);
 
-     useEffect(() => {
-            const fetchMaxPatientId = async () => {
-            try {
-                const response = await fetch(`http://${IP}/check-patientId`);
-                const data = await response.json();
+    useEffect(() => {
+        const fetchMaxPatientId = async () => {
+        try {
+            const response = await fetch(`http://${IP}/check-patientId`);
+            const data = await response.json();
     
-                if (data.success) {
-                setPatientId(data.maxPatientId);
-                setFormValues((prev) => ({ ...prev, patient_Id: data.maxPatientId }));
-                console.log("Fetched Patient ID:", data.maxPatientId);
-                } else {
-                console.error("Failed to fetch Patient ID");
-                }
-            } catch (error) {
-                console.error("Error fetching Patient ID:", error);
+            if (data.success) {
+            setPatientId(data.maxPatientId);
+            setFormValues((prev) => ({ ...prev, patient_Id: data.maxPatientId }));
+            console.log("Fetched Patient ID:", data.maxPatientId);
+            } else {
+            console.error("Failed to fetch Patient ID");
             }
-            };
-            fetchMaxPatientId();
-        }, []);
+        } catch (error) {
+            console.error("Error fetching Patient ID:", error);
+        }
+        };
+        fetchMaxPatientId();
+    }, []);
 
 
     function handleInput(event: any) {
@@ -55,17 +56,25 @@ const add_patient = () => {
             });
 
             if (res.data.success) {
-                alert("patient registered successfully!");
-                navigate("/dashboard");
+                setModalMessage("Patient registered successfully!");
+            } else if (res.data.data) {
+                const existing = res.data.data;
+                setModalMessage(`Patient already exists: ${existing.patient_id}`);
             } else {
-                alert("Failed to register patient.");
+                setModalMessage(res.data.message || "Failed to register patient.");
             }
         } catch (err) {
             console.error(err);
-            alert("An error occurred while creating the case.");
+            setModalMessage("An error occurred while registering the patient.");
         }
     }
 
+    function closeModal() {
+        if (modalMessage === "Patient registered successfully!") {
+            navigate("/dashboard");
+        }
+        setModalMessage(null);
+    }
     
   return (
     <div className='patient-form-container'>
@@ -85,18 +94,18 @@ const add_patient = () => {
                 <label>
                     Name
                     <div className="name-fields">
-                    <input type="text" name="firstname" placeholder="First name" onChange={handleInput}/>
-                    <input type="text" name="middlename" placeholder="Middle name" onChange={handleInput}/>
-                    <input type="text" name="lastname" placeholder="Last name" onChange={handleInput}/>
+                    <input type="text" name="firstname" placeholder="First name" onChange={handleInput} required/>
+                    <input type="text" name="middlename" placeholder="Middle name" onChange={handleInput} required/>
+                    <input type="text" name="lastname" placeholder="Last name" onChange={handleInput} required/>
                     </div>
                 </label>
                 <label>
                     Mobile Number
-                    <input type="tel" name="phone" onChange={handleInput}/>
+                    <input type="tel" name="phone" onChange={handleInput} required/>
                 </label>
                 <label>
                     Birthdate
-                    <input type='date' name="birthdate" onChange={handleInput}/>
+                    <input type='date' name="birthdate" onChange={handleInput} required/>
                 </label>
                 <label>
                     Email
@@ -104,7 +113,7 @@ const add_patient = () => {
                 </label>
                 <label>
                     Gender
-                    <select name="gender" onChange={handleInput}>
+                    <select name="gender" onChange={handleInput} required>
                     <option value="" disabled selected>Select</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -113,17 +122,25 @@ const add_patient = () => {
                  
                 <label>
                     Address
-                    <input type="text" name="address" onChange={handleInput}/>
+                    <input type="text" name="address" onChange={handleInput} required/>
                 </label>
                 
                 </div>
 
                 <div className="form-footer">
-                <button type="button" className="btn-cancel">Cancel</button>
+                <button type="button" className="btn-cancel" onClick={()=>{navigate(-1)}}>Cancel</button>
                 <button type="submit" className="btn-save">Save</button>
                 </div>
             </form>
         </div>
+        {modalMessage && (
+            <div className="modal-overlay">
+                <div className="modal-box">
+                    <p>{modalMessage}</p>
+                    <button onClick={closeModal}>OK</button>
+                </div>
+            </div>
+        )}
     </div>
   )
 }
