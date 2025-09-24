@@ -11,6 +11,8 @@ import Records from './pages/patient-records/patient_records';
 import PatientDetails from './pages/patient-details/patient_details';
 import AddService from './pages/add-service/add_service';
 import ServiceRecord from './pages/service-record/service_record';
+import UpdateInfo from './pages/update-info/update-info';
+
 function App() {
 
   return (
@@ -61,6 +63,11 @@ function App() {
         <Route path="/patients/reports/:id" element={
             <ProtectedRoute>
               <ServiceRecord />
+            </ProtectedRoute>} 
+        />
+        <Route path="/update/info/:id" element={
+            <ProtectedRoute>
+              <UpdateInfo />
             </ProtectedRoute>} 
         />
       </Routes>

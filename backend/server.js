@@ -383,8 +383,7 @@ class Server {
                     console.error(err);
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
-                const caseStatus = results[0]?.case_status === 1;
-                res.json({ success: true, case_status: caseStatus });
+                res.json({ success: true, case_status: results[0]?.status});
             });
         });
     }
