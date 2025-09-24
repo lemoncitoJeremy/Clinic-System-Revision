@@ -44,6 +44,7 @@ class Server {
         this.CheckCaseStatus();
         this.GeneratePDFReport();
         this.SearchPatients();
+        this.CancelRequest();
     }
 
     configureMiddleware() {
@@ -530,6 +531,51 @@ class Server {
         });
     }
     
+    CancelRequest(){
+        this.app.post("/patients/:id/cases/status-update", async (req, res) => {
+            const {
+                case_Id,
+                status
+            } = req.body;
+
+            try {
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdateCaseStatus,
+                        [
+                            status,             
+                            case_Id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdateQueueStatus,
+                        [
+                            status,             
+                            case_Id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                res.json({ success: true, message: "Cancelled Request Successfully" });
+            } catch (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ success: false, error: error.message });
+            }
+        });
+    }
+
     UploadFindings() {
         this.app.post("/upload/findings", async (req, res) => {
             const {

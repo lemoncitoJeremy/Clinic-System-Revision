@@ -114,8 +114,27 @@ const ServiceRecord = () => {
     }));
   };
 
+  async function handleCancelRequest() {
+    try {
+      const res = await axios.post(`http://${IP}/patients/${id}/cases/status-update`, {
+        case_Id: id,
+        status: "Cancelled",
+      });
+
+      if (res.data.success) {
+        setModalMessage("Request has been cancelled successfully!");
+      } else {
+        setModalMessage("Failed to cancel the request.");
+      }
+    } catch (err) {
+      console.error("Error cancelling request:", err);
+      setModalMessage("An error occurred while cancelling the request.");
+    }
+  }
+
   function closeModal() {
-        if (modalMessage === "Findings uploaded successfully!") {
+        if (modalMessage === "Findings uploaded successfully!" ||
+            modalMessage === "Request has been cancelled successfully!") {
             navigate(`/patients/${patient?.patient_id}`);
         }
         setModalMessage(null);
@@ -140,7 +159,19 @@ const ServiceRecord = () => {
         </div>
 
         <section className="service-request">
-          <h3>Service Request</h3>
+          
+          <div className="service-request-header">
+            <h3>Service Request</h3>
+            {!caseStatus?.case_status && (
+              <button 
+                className="cancel-request-btn" 
+                onClick={handleCancelRequest}
+              >
+                Cancel Request
+              </button>
+            )}
+          </div>
+
           <table className="request-table">
             <tbody>
               <tr>

@@ -161,3 +161,27 @@
 .file-link:hover {
   text-decoration: underline;
 }
+
+
+.service-request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cancel-request-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #f9fafb;
+  color: red;
+  border-color: red;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.cancel-request-btn:hover {
+  background-color: #cf2828;
+  color: white;
+}
