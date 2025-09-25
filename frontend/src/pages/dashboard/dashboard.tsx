@@ -25,7 +25,6 @@ const Dashboard = () => {
   const [queuedCases, setQueuedCases] = useState<QueuedCase[]>([]);
   const [totalPatients, setTotalPatients] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const recordsPerPage = 7;
 
   useEffect(() => {
     const fetchQueuedCases = async () => {
@@ -49,7 +48,7 @@ const Dashboard = () => {
         const data = await res.json();
         if (data.success) {
           setTotalPatients(data.TotalPatients[0].total_patients);
-          console.log(data)
+
         }
       } catch (err) {
         console.error("Error fetching total patients:", err);

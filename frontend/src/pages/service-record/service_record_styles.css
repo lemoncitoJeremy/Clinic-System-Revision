@@ -161,3 +161,76 @@
 .file-link:hover {
   text-decoration: underline;
 }
+
+
+.service-request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cancel-request-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #f9fafb;
+  color: red;
+  border-color: red;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.cancel-request-btn:hover {
+  background-color: #cf2828;
+  color: white;
+}
+
+.cancel-modal-overlay {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex; justify-content: center; align-items: center;
+  z-index: 1000;
+}
+
+.cancel-modal-box {
+  background: #fff;
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+  text-align: left;
+}
+
+.cancel-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: #f9fafb;
+  color: red;
+  border-color: red;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #cf2828;
+  color: white;
+}
+
+.keep-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}

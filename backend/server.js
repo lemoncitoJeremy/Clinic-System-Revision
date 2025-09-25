@@ -44,6 +44,8 @@ class Server {
         this.CheckCaseStatus();
         this.GeneratePDFReport();
         this.SearchPatients();
+        this.CancelRequest();
+        this.UpdatePatientInfo();
     }
 
     configureMiddleware() {
@@ -77,14 +79,19 @@ class Server {
 
             this.db.query(sql, [username, password], (err, results) => {
                 if (err) {
-                    console.error('Database error:', err);
-                    return res.status(500).json({ success: false, message: 'Server error' });
+                    return res.status(500).json({ 
+                        success: false, 
+                        message: 'Internal server error' 
+                    });
                 }
 
-                if (results) {
+                if (results && results.length > 0) {
                     returnAccessDict(res, results);
                 } else {
-                    res.status(401).json({ success: false, message: 'Invalid credentials' });
+                    return res.status(401).json({ 
+                        success: false, 
+                        message: 'Wrong Username or Password' 
+                    });
                 }
             });
         });
@@ -118,9 +125,9 @@ class Server {
                 });
             })
             .catch(err => {
-                res.status(500).json({ error: err.message });
+                console.error("Database query error:", err);
+                res.status(500).json({ error: "Internal server error" });
             });
-
         });
     }
 
@@ -139,7 +146,6 @@ class Server {
                 } else {
                     const generatedPatientId = this.GeneratePatientId(null);
                     res.json({ success: true, maxPatientId: generatedPatientId });
-                    console.log("No Patient IDs found");
                 }
             });
         });
@@ -178,6 +184,27 @@ class Server {
             } = req.body;
 
             try {
+                const existingPatient = await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.VerifyPatientRegistration,
+                        [firstname, middlename, lastname],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                if (existingPatient && existingPatient.length > 0) {
+                    return res.status(200).json({
+                        success: false,
+                        message: "Patient already exists",
+                        data: existingPatient[0],
+                    });
+                }
+
+                const normalizedEmail = email && email.trim() !== "" ? email : "N/A";
+
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.RegisterPatient,
@@ -188,21 +215,80 @@ class Server {
                             lastname,
                             birthdate,
                             gender,
-                            email,
+                            normalizedEmail,
                             phone,
                             address,
                         ],
                         (err, results) => {
                             if (err) return reject(err);
                             resolve(results);
-                            res.json({ success: true, message: "Patient registered successfully" });
-                            console.log("Patient registered successfully");
                         }
                     );
                 });
+
+                return res.status(201).json({
+                    success: true,
+                    message: "Patient registered successfully",
+                });
+
             } catch (error) {
                 console.error("Database error:", error);
-                res.status(500).json({ success: false, error: error.message });
+                return res.status(500).json({ 
+                    success: false, 
+                    error: "Internal server error" 
+                });
+            }
+        });
+    }
+
+    UpdatePatientInfo() {
+        this.app.put("/update/patient/:id", async (req, res) => {
+            const { id } = req.params;
+            const {
+                firstname,
+                middlename,
+                lastname,
+                birthdate,
+                gender,
+                email,
+                phone,
+                address,
+            } = req.body;
+            try {
+                const normalizedEmail = email && email.trim() !== "" ? email : "N/A";
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdatePatientInfo,
+                        [
+                            firstname,
+                            middlename,
+                            lastname,
+                            birthdate,
+                            gender,
+                            normalizedEmail,
+                            phone,
+                            address,
+                            id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    message: "Patient information updated successfully",
+                });
+
+            } catch (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({
+                    success: false,
+                    error: "Internal server error",
+                });
             }
         });
     }
@@ -349,8 +435,7 @@ class Server {
                     console.error(err);
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
-                const caseStatus = results[0]?.case_status === 1;
-                res.json({ success: true, case_status: caseStatus });
+                res.json({ success: true, case_status: results[0]?.status});
             });
         });
     }
@@ -377,7 +462,6 @@ class Server {
                 } else {
                     const generatedCaseId = this.GenerateCaseId(null, service);
                     res.json({ success: true, maxCaseId: generatedCaseId });
-                    console.log("No case IDs found");
                 }
             });
         });
@@ -448,6 +532,8 @@ class Server {
                     });
                 }
 
+                const normalizedNotes = notes && notes.trim() !== "" ? notes : "N/A";
+                
                 await new Promise((resolve, reject) => {
                     this.db.query(
                         dbQueries.queries.createCase,
@@ -459,7 +545,7 @@ class Server {
                             requestDate,
                             examType,
                             serviceType,
-                            notes,
+                            normalizedNotes,
                             status
                         ],
                         (err, results) => {
@@ -495,6 +581,51 @@ class Server {
         });
     }
     
+    CancelRequest(){
+        this.app.post("/patients/:id/cases/status-update", async (req, res) => {
+            const {
+                case_Id,
+                status
+            } = req.body;
+
+            try {
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdateCaseStatus,
+                        [
+                            status,             
+                            case_Id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdateQueueStatus,
+                        [
+                            status,             
+                            case_Id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                res.json({ success: true, message: "Cancelled Request Successfully" });
+            } catch (error) {
+                console.error("Database error:", error);
+                res.status(500).json({ success: false, error: error.message });
+            }
+        });
+    }
+
     UploadFindings() {
         this.app.post("/upload/findings", async (req, res) => {
             const {
@@ -550,7 +681,6 @@ class Server {
                             if (err) return reject(err);
                             resolve(results);
                             res.json({ success: true, message: "Findings Uploaded successfully" });
-                            console.log("Findings Uploaded successfully");
                         }
                     );
                 });

@@ -7,6 +7,7 @@ const IP = import.meta.env.VITE_SERVER_IP_ADD;
 
 type Patient = {
   firstname: string;
+  middlename: string;
   lastname: string;
   patient_id: string;
   birthdate: Date;
@@ -74,6 +75,10 @@ const PatientDetails = () => {
     navigate(`/patients/reports/${id}`);
   }
 
+  const HandleUpdateInfo = (id: string) =>{
+     navigate(`/patients/update-info/${id}`);
+  }
+
 
   if (!patient) return <p>Loading...</p>;
 
@@ -91,11 +96,13 @@ const PatientDetails = () => {
       <div className="p-d-content">
         <div className="p-d-header">
           <h1>Patient Details</h1>
-          <button className="update-btn">Update Information</button>
+          <button className="update-btn" 
+                  onClick={() => HandleUpdateInfo(patient.patient_id)}>
+                  Update Information</button>
         </div>
 
         <div className="p-d-details">
-          <h2>{`${patient.firstname} ${patient.lastname}`}</h2>
+          <h2>{`${patient.lastname}, ${patient.firstname} ${patient.middlename}`}</h2>
           <p><strong>Patient ID:</strong> {patient.patient_id}</p>
           <p><strong>Birthdate:</strong> {patient.birthdate
             ? new Date(patient.birthdate).toISOString().split("T")[0]

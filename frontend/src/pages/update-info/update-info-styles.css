@@ -1,64 +1,64 @@
-.patient-form-container {
+.update-patient-form-container {
   display: flex;
   min-height: 100vh;
   font-family: Arial, sans-serif;
 }
 
-.add-patient-navigation-panel {
+.update-patient-navigation-panel {
   width: 200px;
   background-color: #f0f0f0;
 }
 
-.patient-form-section {
+.update-patient-form-section {
   flex: 1;
   padding: 30px;
   background-color: #f9f9f9;
 }
 
-.add-patient-form {
+.update-patient-form {
   background: #fff;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.form-header {
+.update-form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 
-.form-header-right {
+.update-form-header-right {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.patient-id {
+.update-patient-id {
   font-size: 14px;
   color: #333;
 }
 
-.form-buttons {
+.update-form-buttons {
   display: flex;
   gap: 10px;
 }
 
-.form-grid {
+.update-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.form-grid label {
+.update-form-grid label {
   display: flex;
   flex-direction: column;
   font-size: 14px;
   color: #333;
 }
 
-.form-grid input,
-.form-grid select {
+.update-form-grid input,
+.update-form-grid select {
   margin-top: 5px;
   padding: 8px 10px;
   border: 1px solid #ccc;
@@ -67,19 +67,19 @@
   background: #fff;
 }
 
-.name-fields {
+.update-name-fields {
   display: flex;
   gap: 10px;
 }
 
-.form-footer {
+.update-form-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 20px;
 }
 
-.btn-save {
+.update-btn-save {
   background-color: #009a79;
   color: #fff;
   border: none;
@@ -88,7 +88,7 @@
   cursor: pointer;
 }
 
-.btn-cancel {
+.update-btn-cancel {
   background-color: #f8f9fa;
   color: #333;
   border: 1px solid #ccc;
@@ -97,16 +97,16 @@
   cursor: pointer;
 }
 
-.btn-save:hover {
+.update-btn-save:hover {
   background-color: #66bba9;
 }
 
-.btn-cancel:hover {
+.update-btn-cancel:hover {
   background-color: #e9ecef;
 }
 
 
-.modal-overlay {
+.update-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -118,7 +118,7 @@
   align-items: center;
 }
 
-.modal-box {
+.update-modal-box {
   background: white;
   padding: 20px;
   min-width: 300px;
@@ -126,12 +126,12 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.modal-box p {
+.update-modal-box p {
   margin-bottom: 15px;
-  white-space: pre-line; /* keeps \n line breaks */
+  white-space: pre-line;
 }
 
-.modal-box button {
+.update-modal-box button {
   background: #007bff;
   color: white;
   border: none;
@@ -140,6 +140,6 @@
   cursor: pointer;
 }
 
-.modal-box button:hover {
+.update-modal-box button:hover {
   background: #0056b3;
 }

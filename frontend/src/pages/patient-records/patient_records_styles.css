@@ -11,7 +11,7 @@
 
 .p-r-content {
   flex: 1;
-  padding: 2rem;
+  padding: 30px;
 }
 
 .p-r-tools{
@@ -41,11 +41,6 @@
   width: 250px;
 }
 
-
-.p-r-header h1 {
-  font-weight: bold;
-}
-
 .add-btn {
   background-color: #009a79;
   color: white;
@@ -62,6 +57,7 @@
 
 .p-r-table {
   background: white;
+  border: 1px solid #e5e7eb;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   padding: 1rem;
 }
