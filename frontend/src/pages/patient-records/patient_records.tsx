@@ -109,7 +109,7 @@ const PatientRecords = () => {
                 paginatedPatients.map((p) => (
                   <tr key={p.patient_id}>
                     <td>
-                      {`${p.firstname || ""} ${p.middlename || ""} ${p.lastname || ""}`}
+                      {`${p.lastname || ""}, ${p.firstname || ""} ${p.middlename || ""}`}
                     </td>
                     <td>
                       {p.birthdate

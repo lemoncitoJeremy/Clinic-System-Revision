@@ -45,6 +45,7 @@ class Server {
         this.GeneratePDFReport();
         this.SearchPatients();
         this.CancelRequest();
+        this.UpdatePatientInfo();
     }
 
     configureMiddleware() {
@@ -145,7 +146,6 @@ class Server {
                 } else {
                     const generatedPatientId = this.GeneratePatientId(null);
                     res.json({ success: true, maxPatientId: generatedPatientId });
-                    console.log("No Patient IDs found");
                 }
             });
         });
@@ -236,6 +236,58 @@ class Server {
                 return res.status(500).json({ 
                     success: false, 
                     error: "Internal server error" 
+                });
+            }
+        });
+    }
+
+    UpdatePatientInfo() {
+        this.app.put("/update/patient/:id", async (req, res) => {
+            const { id } = req.params;
+            const {
+                firstname,
+                middlename,
+                lastname,
+                birthdate,
+                gender,
+                email,
+                phone,
+                address,
+            } = req.body;
+            try {
+                const normalizedEmail = email && email.trim() !== "" ? email : "N/A";
+
+                await new Promise((resolve, reject) => {
+                    this.db.query(
+                        dbQueries.queries.UpdatePatientInfo,
+                        [
+                            firstname,
+                            middlename,
+                            lastname,
+                            birthdate,
+                            gender,
+                            normalizedEmail,
+                            phone,
+                            address,
+                            id
+                        ],
+                        (err, results) => {
+                            if (err) return reject(err);
+                            resolve(results);
+                        }
+                    );
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    message: "Patient information updated successfully",
+                });
+
+            } catch (error) {
+                console.error("Database error:", error);
+                return res.status(500).json({
+                    success: false,
+                    error: "Internal server error",
                 });
             }
         });
@@ -410,7 +462,6 @@ class Server {
                 } else {
                     const generatedCaseId = this.GenerateCaseId(null, service);
                     res.json({ success: true, maxCaseId: generatedCaseId });
-                    console.log("No case IDs found");
                 }
             });
         });
@@ -630,7 +681,6 @@ class Server {
                             if (err) return reject(err);
                             resolve(results);
                             res.json({ success: true, message: "Findings Uploaded successfully" });
-                            console.log("Findings Uploaded successfully");
                         }
                     );
                 });

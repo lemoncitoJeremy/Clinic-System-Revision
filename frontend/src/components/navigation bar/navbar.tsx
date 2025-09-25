@@ -46,10 +46,10 @@ const Navbar = () => {
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
             </a>
-            <a onClick={() => navigate("/update-info")}>
+            {/* <a onClick={() => navigate("/update/info")}>
               <img src={UpdateIcon} alt="Update" className="nav-icon" />
               <span>Update Info</span>
-        </a>
+            </a> */}
           </>
         )} 
       </div>

@@ -11,7 +11,7 @@
 
 .p-r-content {
   flex: 1;
-  padding: 2rem;
+  padding: 30px;
 }
 
 .p-r-tools{
@@ -39,11 +39,6 @@
   border-radius: 6px;
   font-size: 0.9rem;
   width: 250px;
-}
-
-
-.p-r-header h1 {
-  font-weight: bold;
 }
 
 .add-btn {

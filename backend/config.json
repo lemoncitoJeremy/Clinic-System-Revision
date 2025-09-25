@@ -27,6 +27,7 @@
         "RetrieveRadiologistbyName":"SELECT radiologist_id FROM dim_radiologist WHERE radiologist_name = ?",
         "RetrieveRadioTechbyName":"SELECT radio_tech_id FROM dim_radio_technologist WHERE radio_tech_name = ?",
         "InsertManualPhysician":"INSERT INTO dim_physicians (physician_name) VALUES (?);",
-        "VerifyPatientRegistration":"SELECT * FROM dim_patients WHERE firstname= ? AND middlename = ? AND lastname = ?"
+        "VerifyPatientRegistration":"SELECT * FROM dim_patients WHERE firstname= ? AND middlename = ? AND lastname = ?",
+        "UpdatePatientInfo": "UPDATE dim_patients SET firstname = ?, middlename = ?, lastname = ?, birthdate = ?, gender = ?, email_address = ?, mobile_number = ?, address = ? WHERE patient_id = ?;"
     }
 }

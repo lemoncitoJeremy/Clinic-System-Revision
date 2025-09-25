@@ -261,10 +261,10 @@ const AddService = () => {
           </div>
 
           <div className="buttons">
-            <button className="cancel-btn" onClick={handleCancel}>
+            <button className="a-s-cancel-btn" onClick={handleCancel}>
               Cancel
             </button>
-            <button className="submit-btn" type="submit">
+            <button className="a-s-submit-btn" type="submit">
               Add Service
             </button>
           </div>

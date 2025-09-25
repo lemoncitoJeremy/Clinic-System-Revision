@@ -65,7 +65,7 @@ function App() {
               <ServiceRecord />
             </ProtectedRoute>} 
         />
-        <Route path="/update/info/:id" element={
+        <Route path="/patients/update-info/:id" element={
             <ProtectedRoute>
               <UpdateInfo />
             </ProtectedRoute>} 

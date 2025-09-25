@@ -11,13 +11,13 @@
 
 .patient-form-section {
   flex: 1;
-  padding: 40px;
+  padding: 30px;
   background-color: #f9f9f9;
 }
 
 .add-patient-form {
   background: #fff;
-  padding: 30px;
+  padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
@@ -25,13 +25,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
-.form-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
 
 .form-header-right {
   display: flex;
