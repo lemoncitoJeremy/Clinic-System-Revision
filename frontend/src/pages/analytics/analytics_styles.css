@@ -1,0 +1,95 @@
+.analytics-page {
+  display: flex;
+  background: #f9fafb;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.analytics-p-navigation {
+  width: 200px;
+  background-color: #f0f0f0;
+  height: 100vh;
+}
+
+.analytics-content {
+  flex: 1;
+  padding: 30px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
+  gap: 30px;
+  align-items: start;
+  max-height: 100vh; 
+  overflow-y: auto; 
+}
+
+.analytics-section {
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  font-size: 12px;
+  min-height: 350px;
+}
+
+.analytics-section h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  text-align: center;
+}
+
+.filter-group {
+  margin-bottom: 16px;
+}
+
+.filter-group label {
+  margin-right: 8px;
+}
+
+.filter-group select {
+  margin-right: 16px;
+  padding: 4px 8px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th {
+  background-color: #f4f4f4;
+  text-align: left;
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.analytics-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.analytics-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pagination button {
+  padding: 4px 12px;
+}

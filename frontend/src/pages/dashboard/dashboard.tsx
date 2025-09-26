@@ -16,15 +16,32 @@ const Dashboard = () => {
     firstname: string;
     middlename: string;
     lastname: string;
-    requesting_physician: string;
+    physician_name: string;
     service_type: string;
     status: string;
     request_date: Date;
   };
 
   const [queuedCases, setQueuedCases] = useState<QueuedCase[]>([]);
+  const [tableCases, setTableCases] = useState<QueuedCase[]>([]); 
   const [totalPatients, setTotalPatients] = useState<number>(0);
+  const [totalCasesDone, setTotalCases] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [filterStatus, setFilterStatus] = useState<string>("Pending");
+
+  const handleFilterChange = async (status: string) => {
+    try {
+      const res = await fetch(`http://${IP}/dash-filter-cases?status=${status}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setTableCases(data.Filtered);
+        setCurrentPage(1);
+      }
+    } catch (err) {
+      console.error("Error fetching filtered cases:", err);
+    }
+  };
 
   useEffect(() => {
     const fetchQueuedCases = async () => {
@@ -48,7 +65,6 @@ const Dashboard = () => {
         const data = await res.json();
         if (data.success) {
           setTotalPatients(data.TotalPatients[0].total_patients);
-
         }
       } catch (err) {
         console.error("Error fetching total patients:", err);
@@ -57,12 +73,30 @@ const Dashboard = () => {
     fetchTotalPatients();
   }, []);
 
-  // Pagination logic
-  const rowsPerPage = 7;
+  useEffect(() => {
+    const fetchTotalDone = async () => {
+      try {
+        const res = await fetch(`http://${IP}/total-cases-done`);
+        const data = await res.json();
+        if (data.success) {
+          setTotalCases(data.TotalCasesDone[0].total_cases_done);
+        }
+      } catch (err) {
+        console.error("Error fetching total patients:", err);
+      }
+    };
+    fetchTotalDone();
+  }, []);
+
+  useEffect(() => {
+    handleFilterChange(filterStatus);
+  }, []);
+
+  const rowsPerPage = 6;
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = queuedCases.slice(indexOfFirstRow, indexOfLastRow);
-  const totalPages = Math.ceil(queuedCases.length / rowsPerPage);
+  const currentRows = tableCases.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(tableCases.length / rowsPerPage);
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -74,7 +108,6 @@ const Dashboard = () => {
 
   const handleRowClick = (caseId: string) => {
     navigate(`/patients/reports/${caseId}`);
-    
   };
 
   return (
@@ -88,8 +121,10 @@ const Dashboard = () => {
             <div className='hder-add-patient'>
               <h1 id="welcomeMessage">Dashboard</h1>
               <div className='dash-btn'>
-                <button id="viewQueueBtn" onClick={()=>{navigate('/queue')}}>View Queue</button> 
-                <button id="addPatientBtn" onClick={()=>{navigate('/add-patient')}}>Add Patient</button>
+                <button id="viewQueueBtn" 
+                        onClick={()=>{navigate('/queue')}}>View Queue</button> 
+                <button id="addPatientBtn"
+                        onClick={()=>{navigate('/add-patient')}}>Add Patient</button>
               </div> 
             </div>
             <div className="kpi-cards">
@@ -97,8 +132,12 @@ const Dashboard = () => {
                 <p>Total patients Registered</p>
                 <h2>{totalPatients}</h2>
               </div>
+              <div className="kpi-card customer-count">
+                <p>Total Task Done</p>
+                <h2>{totalCasesDone}</h2>
+              </div>
               <div className="kpi-card task-count">
-                <p>Total tasks in queue</p>
+                <p>Total Tasks in Queue</p>
                 <h2>{queuedCases.length}</h2>
               </div>
             </div>
@@ -113,7 +152,22 @@ const Dashboard = () => {
                   <th>Service</th>
                   <th>Status</th>
                   <th>Physician</th>
-                  <th></th>
+                  <th>
+                    <select 
+                      name="status-filter" 
+                      className='status-filter' 
+                      value={filterStatus} 
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setFilterStatus(value);
+                        handleFilterChange(value);
+                      }}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Done">Done</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -132,17 +186,19 @@ const Dashboard = () => {
                       </td>
                       <td>{caseItem.service_type}</td>
                       <td>
-                        <span className={`q-status-badge ${caseItem.status.toLowerCase()}`}>
+                        <span className={`dash-q-status-badge ${caseItem.status.toLowerCase()}`}>
                           {caseItem.status}
                         </span>
                       </td>
-                      <td>{caseItem.requesting_physician}</td>
+                      <td>{caseItem.physician_name}</td>
                       <td>
                         <a
                           className="arrow-btn"
                           onClick={() => handleRowClick(caseItem.case_id)}
                         >
-                          <img src={ArrowIcon} alt="Arrow" className="arrow-icon" style={{ width: '15px', height: '15px' }} />
+                          <img src={ArrowIcon} alt="Arrow" 
+                               className="arrow-icon" 
+                               style={{ width: '15px', height: '15px' }} />
                         </a>
                       </td>
                     </tr>

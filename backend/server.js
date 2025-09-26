@@ -46,6 +46,11 @@ class Server {
         this.SearchPatients();
         this.CancelRequest();
         this.UpdatePatientInfo();
+        this.GetDoneCasesCount();
+        this.GetDashFilterCases();
+        this.GetXrayUltraData();
+        this.GetRefPhysTable();
+        this.GetRadServiceTable();
     }
 
     configureMiddleware() {
@@ -606,9 +611,8 @@ class Server {
 
                 await new Promise((resolve, reject) => {
                     this.db.query(
-                        dbQueries.queries.UpdateQueueStatus,
-                        [
-                            status,             
+                        dbQueries.queries.DeleteQueue,
+                        [          
                             case_Id
                         ],
                         (err, results) => {
@@ -701,9 +705,8 @@ class Server {
 
                 await new Promise((resolve, reject) => {
                     this.db.query(
-                        dbQueries.queries.UpdateQueueStatus,
-                        [
-                            status,             
+                        dbQueries.queries.DeleteQueue,
+                        [            
                             case_Id
                         ],
                         (err, results) => {
@@ -713,7 +716,7 @@ class Server {
                     );
                 });
 
-                res.json({ success: true, message: "Uploaded Findings and Changed Status Successfully" });
+                res.json({ success: true, message: "Uploaded Findings and Removed From Queue Successfully" });
             } catch (error) {
                 console.error("Database error:", error);
                 res.status(500).json({ success: false, error: error.message });
@@ -872,6 +875,20 @@ class Server {
         });
     }   
 
+    GetDashFilterCases() {
+        this.app.get("/dash-filter-cases", (req, res) => {
+            const { status } = req.query;
+            const sql = dbQueries.queries.FilterCaseStatus;
+            this.db.query(sql, [status], (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                res.json({ success: true, Filtered: results });
+            });
+        });
+    }
+
     GetPatientCount(){
         this.app.get("/total-patients", (req, res) => {
             const sql = dbQueries.queries.TotalPatientsRegistered;
@@ -881,6 +898,59 @@ class Server {
                     return res.status(500).json({ success: false, error: "Database error" });
                 }
                 res.json({ success: true, TotalPatients: results });
+            });
+        });
+    }
+
+    GetDoneCasesCount(){
+        this.app.get("/total-cases-done", (req, res) => {
+            const sql = dbQueries.queries.TotalCasesDone;
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                res.json({ success: true, TotalCasesDone: results });
+            });
+        });
+    }
+
+    GetXrayUltraData(){
+        this.app.get("/xra-ult", (req, res) => {
+            const sql = dbQueries.queries.Analytics_total_XrUltr;
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+                res.json({ success: true, xrult: results });
+            });
+        });
+    }
+    GetRefPhysTable(){
+        this.app.get("/ref-phys", (req, res) => {
+            const sql = dbQueries.queries.Analytics_rfrrls_perM;
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+
+                res.json({ success: true, refPhys: results });
+            });
+        });
+    }
+
+    GetRadServiceTable(){
+        this.app.get("/rad-serv", (req, res) => {
+            const sql = dbQueries.queries.Analytics_radService_perM;
+            this.db.query(sql, (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, error: "Database error" });
+                }
+
+                res.json({ success: true, radServ: results });
             });
         });
     }

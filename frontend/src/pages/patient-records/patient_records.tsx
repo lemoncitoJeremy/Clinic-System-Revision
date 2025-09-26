@@ -139,7 +139,7 @@ const PatientRecords = () => {
           {patients.length > recordsPerPage && (
             <div className="p-r-pagination">
               <button onClick={handlePrev} disabled={currentPage === 1}>
-                Prev
+                Previous
               </button>
               <span>
                 Page {currentPage} of {totalPages}

@@ -136,7 +136,7 @@
   color: #d63384;
 }
 
-.dash-q-status-badge.completed {
+.dash-q-status-badge.done {
   background-color: #d1fae5;
   color: #065f46;
 }
@@ -191,4 +191,13 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
+}
+
+.status-filter {
+  padding: 5px 5px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
 }

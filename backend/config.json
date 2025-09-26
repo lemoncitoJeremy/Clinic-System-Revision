@@ -16,18 +16,25 @@
         "GetServiceRecordByCaseId": "SELECT c.case_id, c.patient_id, c.patient_source, p.physician_name AS requesting_physician, c.request_date, c.exam_type, c.service_type, c.notes, c.status\nFROM case_applications c\nLEFT JOIN dim_physicians p ON c.requesting_physician = p.physician_id\nWHERE c.case_id = ?;",
         "RetrievePatientCases": "SELECT c.case_id, c.patient_id, c.patient_source, p.physician_name AS requesting_physician, c.request_date, c.exam_type, c.service_type, c.notes, c.status\nFROM case_applications c\nLEFT JOIN dim_physicians p ON c.requesting_physician = p.physician_id\nWHERE c.patient_id = ?;",
         "TotalPatientsRegistered":"SELECT COUNT(DISTINCT patient_id) AS total_patients FROM dim_patients",
+        "TotalCasesDone":"SELECT COUNT(DISTINCT case_id) AS total_cases_done FROM case_applications WHERE status = 'Done'",
         "RegisteredRadiologist":"SELECT * FROM dim_radiologist",
         "RegisteredRadioTech":"SELECT * FROM dim_radio_technologist",
         "UploadFindings":"INSERT INTO case_results (case_id, radiographic_findings, radiographic_impressions, radiologist, radio_technologist, status) VALUES ( ?, ?, ?, ?, ?, ?);",
         "UpdateCaseStatus":"UPDATE case_applications\nSET status = ?\nWHERE case_id = ?",
-        "UpdateQueueStatus":"UPDATE queue_table\nSET status = ?\nWHERE case_id = ?",
+        "DeleteQueue":"DELETE FROM queue_table WHERE case_id = ?",
         "CheckCaseStatus":"SELECT status FROM case_applications WHERE case_id = ? LIMIT 1;",
         "PDFReportData": "SELECT ca.case_id, CONCAT(dp.lastname, ', ', dp.firstname, ' ', dp.middlename) AS patient_name, ca.patient_source, dr.physician_name, ca.request_date, ca.exam_type, ca.service_type, cr.radiographic_findings, cr.radiographic_impressions, drl.radiologist_name, drl.medical_credentials AS radiologist_medical_credentials, drt.radio_tech_name, drt.medical_credentials AS tech_medical_credentials, cr.status FROM case_applications ca INNER JOIN dim_patients dp ON ca.patient_id = dp.patient_id INNER JOIN dim_physicians dr ON ca.requesting_physician = dr.physician_id INNER JOIN case_results cr ON ca.case_id = cr.case_id INNER JOIN dim_radiologist drl ON cr.radiologist = drl.radiologist_id INNER JOIN dim_radio_technologist drt ON cr.radio_technologist = drt.radio_tech_id WHERE ca.case_id = ? AND cr.status = 'Done'",
         "FilterPatientbySearch": "SELECT * FROM dim_patients WHERE CONCAT(firstname, ' ', lastname) LIKE ? OR firstname LIKE ? OR lastname LIKE ? OR patient_id LIKE ?",
+        "FilterCaseStatus":"SELECT ca.case_id, ca.request_date, ca.service_type, ca.status, dp.physician_name FROM case_applications ca LEFT JOIN dim_physicians dp ON ca.requesting_physician = dp.physician_id WHERE status = ? ORDER BY case_id ASC",
         "RetrieveRadiologistbyName":"SELECT radiologist_id FROM dim_radiologist WHERE radiologist_name = ?",
         "RetrieveRadioTechbyName":"SELECT radio_tech_id FROM dim_radio_technologist WHERE radio_tech_name = ?",
         "InsertManualPhysician":"INSERT INTO dim_physicians (physician_name) VALUES (?);",
         "VerifyPatientRegistration":"SELECT * FROM dim_patients WHERE firstname= ? AND middlename = ? AND lastname = ?",
-        "UpdatePatientInfo": "UPDATE dim_patients SET firstname = ?, middlename = ?, lastname = ?, birthdate = ?, gender = ?, email_address = ?, mobile_number = ?, address = ? WHERE patient_id = ?;"
+        "UpdatePatientInfo": "UPDATE dim_patients SET firstname = ?, middlename = ?, lastname = ?, birthdate = ?, gender = ?, email_address = ?, mobile_number = ?, address = ? WHERE patient_id = ?;",
+
+        "Analytics_total_XrUltr":"SELECT MONTHNAME(request_date) AS month, SUM(CASE WHEN case_id LIKE '%X%' THEN 1 ELSE 0 END) AS total_xray, SUM(CASE WHEN case_id LIKE '%U%' THEN 1 ELSE 0 END) AS total_ultrasound FROM case_applications WHERE status = 'Done' GROUP BY MONTH(request_date), MONTHNAME(request_date) ORDER BY MONTH(request_date);",
+        "Analytics_rfrrls_perM":"SELECT dp.physician_name AS physician_name, DATE_FORMAT(ca.request_date, '%Y-%m') AS referral_month, COUNT(ca.patient_source) AS total_referrals FROM case_applications ca INNER JOIN dim_physicians dp ON ca.requesting_physician = dp.physician_id WHERE ca.patient_source = 'Referral' GROUP BY dp.physician_name, referral_month ORDER BY referral_month;",
+        "Analytics_radService_perM":"SELECT name, role, request_date, SUM(total_services) AS total_services FROM (SELECT dr.radiologist_name AS name, 'Radiologist' AS role, DATE_FORMAT(ca.request_date,'%Y-%m') AS request_date, COUNT(cr.case_id) AS total_services FROM case_results cr INNER JOIN dim_radiologist dr ON cr.radiologist = dr.radiologist_id INNER JOIN case_applications ca ON cr.case_id = ca.case_id GROUP BY dr.radiologist_name, DATE_FORMAT(ca.request_date,'%Y-%m') UNION ALL SELECT rt.radio_tech_name AS name, 'Technologist' AS role, DATE_FORMAT(ca.request_date,'%Y-%m') AS request_date, COUNT(cr.case_id) AS total_services FROM case_results cr INNER JOIN dim_radio_technologist rt ON cr.radio_technologist = rt.radio_tech_id INNER JOIN case_applications ca ON cr.case_id = ca.case_id GROUP BY rt.radio_tech_name, DATE_FORMAT(ca.request_date,'%Y-%m')) AS combined GROUP BY name, role, request_date ORDER BY request_date;",
+        "Analytics_rebate_perPerson":""
     }
 }
