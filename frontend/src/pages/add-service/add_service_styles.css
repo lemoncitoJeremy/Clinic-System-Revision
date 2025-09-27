@@ -92,7 +92,7 @@ html, body {
 }
 
 .physician-btn button {
-  background-color: #009a79;
+  background-color: #2596be;
   color: white;
   border: none;
   border-radius: 6px;
@@ -108,7 +108,7 @@ html, body {
 }
 
 .physician-btn button:hover {
-  background-color: #007a61;
+  background-color: #82c7e0;
 }
 
 textarea {
@@ -128,20 +128,24 @@ textarea {
 .a-s-cancel-btn {
   background: #f0f0f0;
   border: 1px solid #ccc;
-  padding: 14px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .a-s-submit-btn {
-  background: #009a79;
+  background: #2596be;
   color: white;
   border: none;
-  padding: 14px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .a-s-submit-btn:hover {
-  background-color: #66bba9;
+  background-color: #82c7e0;
 }

@@ -84,16 +84,18 @@
   }
 
   .p-deets-add-btn {
-    background-color: #009a79;
+    background-color: #2596be;
     color: white;
     padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
   }
 
   .p-deets-add-btn:hover {
-    background-color: #66bba9;
+    background-color: #82c7e0;
   }
 
   .service-table table {
@@ -143,7 +145,7 @@
   }
 
   .view-report {
-    color: #009a79;
+    color: #2596be;
     text-decoration: underline;
     cursor: pointer;
   }

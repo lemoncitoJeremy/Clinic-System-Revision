@@ -80,11 +80,13 @@
 }
 
 .btn-save {
-  background-color: #009a79;
+  background-color: #2596be;
   color: #fff;
   border: none;
   border-radius: 6px;
-  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
@@ -93,12 +95,14 @@
   color: #333;
   border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 8px 16px;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
 .btn-save:hover {
-  background-color: #66bba9;
+  background-color: #82c7e0;
 }
 
 .btn-cancel:hover {

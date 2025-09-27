@@ -1,4 +1,4 @@
-import Logo from '../../assets/logo2.png';
+import Logo from '../../assets/Logo3.png';
 import DashboardIcon from '../../assets/dashboard.png';
 import PatientsIcon from '../../assets/patient-records.png';
 import QueueIcon from '../../assets/tast-queue.png';
@@ -25,11 +25,8 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-options">
         <div className="logo">
-          <img src={Logo} alt="Logo" style={{ width: '180px', height: '180px' }} />
+          <img src={Logo} alt="Logo" style={{ width: '180px', height: '180px', marginBottom:'30px' }} />
         </div>
-
-        {isAdmin && (
-          <>
             <a onClick={() => navigate("/dashboard")} className="admin-only">
               <img src={DashboardIcon} alt="Dashboard" className="nav-icon" />
               <span>Dashboard</span>
@@ -42,14 +39,12 @@ const Navbar = () => {
               <img src={QueueIcon} alt="Queue" className="nav-icon" />
               <span>Task Queue</span>
             </a>
+        {isAdmin && (
+          <>
             <a onClick={() => navigate("/analytics")}>
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
             </a>
-            {/* <a onClick={() => navigate("/update/info")}>
-              <img src={UpdateIcon} alt="Update" className="nav-icon" />
-              <span>Update Info</span>
-            </a> */}
           </>
         )} 
       </div>

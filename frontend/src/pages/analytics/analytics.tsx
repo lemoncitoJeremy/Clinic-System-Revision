@@ -147,7 +147,7 @@ const Analytics = () => {
         </div>
 
         <div className="analytics-section">
-          <h2>Physician Referrals per Month</h2>
+          <h2>Physician Referrals</h2>
           <div className="filter-group">
             <label htmlFor="monthFilterRef">Filter by Month:</label>
             <select
@@ -201,7 +201,7 @@ const Analytics = () => {
         </div>
 
         <div className="analytics-section">
-          <h2>Radiologist / Technologist Services per Month</h2>
+          <h2>Radiologist / Technologist Services</h2>
           <div className="filter-group">
             <label htmlFor="monthFilterRad">Filter by Month: </label>
             <select
@@ -266,6 +266,10 @@ const Analytics = () => {
                 Next
             </button>
           </div>
+        </div>
+
+        <div className="analytics-section">
+          
         </div>
 
       </div>
