@@ -40,7 +40,6 @@ const form_page = () => {
             if (data.success) {
             setCaseId(data.maxCaseId);
             setFormValues((prev) => ({ ...prev, case_Id: data.maxCaseId }));
-            console.log("Fetched case ID:", data.maxCaseId);
             } else {
             console.error("Failed to fetch case ID");
             }
@@ -61,7 +60,6 @@ const form_page = () => {
         event.preventDefault();
 
         try {
-            console.log("Submitting form with values:", formValues);
             const res = await axios.post(`http://${IP}/create-case`, {
                 ...formValues
             });

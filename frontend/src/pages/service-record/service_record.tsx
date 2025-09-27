@@ -83,7 +83,6 @@ const ServiceRecord = () => {
         const res = await axios.get(`http://${IP}/radiology`);
         const data = res.data;
         setRadiology(data);
-        console.log("data",data)
         } catch (error) {
         console.error("Error fetching data:", error);
         }
@@ -91,7 +90,6 @@ const ServiceRecord = () => {
 
   async function handleSubmit(event: any) {
         event.preventDefault();
-        console.log(formValues)
         try {
             const res = await axios.post(`http://${IP}/upload/findings`, {
                 ...formValues

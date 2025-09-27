@@ -106,7 +106,6 @@ const AddService = () => {
 
   async function handleSubmit(event: any) {
         event.preventDefault();
-        console.log(formValues)
         try {
             const res = await axios.post(`http://${IP}/create-case`, {
                 ...formValues

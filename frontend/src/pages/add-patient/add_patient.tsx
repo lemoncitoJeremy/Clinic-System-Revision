@@ -31,7 +31,6 @@ const add_patient = () => {
             if (data.success) {
             setPatientId(data.maxPatientId);
             setFormValues((prev) => ({ ...prev, patient_Id: data.maxPatientId }));
-            console.log("Fetched Patient ID:", data.maxPatientId);
             } else {
             console.error("Failed to fetch Patient ID");
             }

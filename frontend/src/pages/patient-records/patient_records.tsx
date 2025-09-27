@@ -47,7 +47,6 @@ const PatientRecords = () => {
       const res = await fetch(`http://${IP}/search?Input=${searchInput}`);
       const data = await res.json();
       if (data.success) {
-        console.log(data)
         setPatients(data.RegisteredPatients);
         setCurrentPage(1);
       }

@@ -57,7 +57,6 @@ const PatientDetails = () => {
           const res = await fetch(`http://${IP}/patients/${id}/cases`);
           const data = await res.json();
           if (data.success) {
-          console.log(data.PatientCases)
           setPatientServices(data.PatientCases);
           }
       } catch (err) {

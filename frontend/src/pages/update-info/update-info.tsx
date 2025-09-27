@@ -59,7 +59,6 @@ const UpdatePatient = () => {
 
   async function handleSubmit(event: any) {
     event.preventDefault();
-    console.log(formValues)
     try {
       const res = await axios.put(`http://${IP}/update/patient/${id}`, {
         ...formValues,
