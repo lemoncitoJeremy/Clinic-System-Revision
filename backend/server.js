@@ -745,29 +745,26 @@ class Server {
                 }
 
                 const data = results[0]; 
-
-                // const outputPath = path.join(__dirname, '../Records', `${caseId}_report.pdf`);
-                // if (!fs.existsSync(path.join(__dirname, '../Records'))) {
-                //     fs.mkdirSync(path.join(__dirname, '../Records'));
-                // }
+    
 
                 const doc = new PDFDocument({ margin: 50 });
-                // doc.pipe(fs.createWriteStream(outputPath));
                 doc.pipe(res);
 
-                doc.fontSize(16).fillColor("#009a79").text(
-                    "A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
-                doc.fontSize(10).fillColor("black").text(
-                    "027 Poblacion Sur, Talavera | 0960-6270-613 | asanglaymedicalanddiagnostic@gmail.com",
-                    { align: "center" }
-                );
-                doc.fontSize(10).font("Helvetica-Bold").text(
-                    "Pablo Medical Clinic | www.pablomedicalclinic.com",
-                    { align: "center" }
-                );
-                doc.moveDown();
+                 const headerPath = path.join(__dirname, "../frontend/src/assets/ReportHeader.png");
+                    if (fs.existsSync(headerPath)) {
+                        doc.image(headerPath, {
+                            fit: [500, 100], 
+                            align: "center",
+                            valign: "center"
+                        });
+                        doc.moveDown(2); 
+                    } else {
+                        console.warn("Header image not found at:", headerPath);
+                        doc.fontSize(16).fillColor("#009a79").text(
+                            "A.S. MEDICAL AND DIAGNOSTIC CENTER", { align: "center" });
+                        doc.moveDown();
+                    }
 
-                //----
                 const reportTitle = data.service_type.toLowerCase() === "ultrasound" 
                     ? "ULTRASOUND REPORT" 
                     : "RADIOLOGIC REPORT";
@@ -814,54 +811,76 @@ class Server {
                 //----
                 const pageWidth = doc.page.width - doc.page.margins.left - doc.page.margins.right;
                 const halfWidth = pageWidth / 2;
-                const y = doc.y;
-                doc.text("__________________________", doc.page.margins.left, y, 
-                        { width: halfWidth, align: "center" });
-                doc.text("__________________________", doc.page.margins.left + halfWidth, y, 
-                        { width: halfWidth, align: "center" });
-                doc.moveDown();
+                const baseY = doc.y;
 
-                //----
-                const y2 = doc.y;
+                const sigWidth = 100;
+                const sigHeight = 50;
 
+                const techSigPath = path.join(__dirname, `./signatures/${data.radio_tech_name}.png`);
+                const radiologistSigPath = path.join(__dirname, `./signatures/${data.radiologist_name}.png`);
+
+                if (fs.existsSync(techSigPath)) {
+                    doc.image(techSigPath, doc.page.margins.left + (halfWidth - sigWidth) / 2, baseY, {
+                        fit: [sigWidth, sigHeight],
+                        align: "center"
+                    });
+                }
+
+                if (fs.existsSync(radiologistSigPath)) {
+                    doc.image(radiologistSigPath, doc.page.margins.left + halfWidth + (halfWidth - sigWidth) / 2, baseY, {
+                        fit: [sigWidth, sigHeight],
+                        align: "center"
+                    });
+                }
+
+                const lineY = baseY + sigHeight ;
+
+                doc.text("__________________________", doc.page.margins.left, lineY, { 
+                    width: halfWidth, align: "center" 
+                });
+                doc.text("__________________________", doc.page.margins.left + halfWidth, lineY, { 
+                    width: halfWidth, align: "center" 
+                });
+
+                doc.y = lineY + 15; 
+                const textY = doc.y;
 
                 doc.font("Helvetica-Bold");
-                doc.text(`${data.radio_tech_name}`, doc.page.margins.left, y2, {
-                width: halfWidth,
-                align: "center"
+                doc.text(`${data.radio_tech_name}`, doc.page.margins.left, textY, {
+                    width: halfWidth,
+                    align: "center"
                 });
                 doc.moveDown(0.5);
                 doc.text(`${data.tech_medical_credentials}`, {
-                width: halfWidth,
-                align: "center"
+                    width: halfWidth,
+                    align: "center"
                 });
 
                 doc.font("Helvetica"); 
                 doc.moveDown(0.3);
                 doc.text("Radiologic Technologist", {
-                width: halfWidth,
-                align: "center"
+                    width: halfWidth,
+                    align: "center"
                 });
-
 
                 const rightX = doc.page.margins.left + halfWidth;
 
                 doc.font("Helvetica-Bold");
-                doc.text(`${data.radiologist_name}`, rightX, y2, {
-                width: halfWidth,
-                align: "center"
+                doc.text(`${data.radiologist_name}`, rightX, textY, {
+                    width: halfWidth,
+                    align: "center"
                 });
                 doc.moveDown(0.5);
                 doc.text(`${data.radiologist_medical_credentials}`, rightX, doc.y, {
-                width: halfWidth,
-                align: "center"
+                    width: halfWidth,
+                    align: "center"
                 });
 
                 doc.font("Helvetica");
                 doc.moveDown(0.3);
                 doc.text("Radiologist", rightX, doc.y, {
-                width: halfWidth,
-                align: "center"
+                    width: halfWidth,
+                    align: "center"
                 });
 
                 doc.end();
