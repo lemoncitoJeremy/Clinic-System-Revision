@@ -9,6 +9,7 @@ import AnalyticsIcon from '../../assets/trending-up.png';
 import LogoutIcon from '../../assets/log-out.png';
 import './nav_styles.css';
 import { useNavigate } from 'react-router-dom';
+import StethoscopeIcon from '../../assets/stethoscope_light.png'
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -44,6 +45,10 @@ const Navbar = () => {
             <a onClick={() => navigate("/analytics")}>
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
+            </a>
+            <a onClick={() => navigate("/medicalStaff")}>
+              <img src={StethoscopeIcon} alt="MedicalStaff" className="nav-icon" />
+              <span>Medical Staff</span>
             </a>
           </>
         )} 
