@@ -77,30 +77,37 @@ class Server {
         });
     }
 
-    handleLogin() {
-        this.app.post('/login', (req, res) => {
-            const { username, password } = req.body;
-            const sql = dbQueries.queries.login;
+   handleLogin() {
+    this.app.post('/login', (req, res) => {
+        const { username, password } = req.body;
+        const sql = dbQueries.queries.login;
+        this.db.query(sql, [username, password], (err, results) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error'
+                });
+            }
+            if (!results || results.length == 0) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Wrong Username or Password'
+                });
+            }
 
-            this.db.query(sql, [username, password], (err, results) => {
-                if (err) {
-                    return res.status(500).json({ 
-                        success: false, 
-                        message: 'Internal server error' 
-                    });
-                }
+            const user = results[0];
 
-                if (results && results.length > 0) {
-                    returnAccessDict(res, results);
-                } else {
-                    return res.status(401).json({ 
-                        success: false, 
-                        message: 'Wrong Username or Password' 
-                    });
-                }
-            });
+            if (user.username === username && user.password === password) {
+                returnAccessDict(res, results);
+            } else {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Wrong Username or Password'
+                });
+            }
         });
-    }
+    });
+}
     
     SelectService() {
         this.app.get("/selectService/:service", (req, res) => {

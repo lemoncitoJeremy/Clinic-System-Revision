@@ -266,12 +266,7 @@ const Analytics = () => {
                 Next
             </button>
           </div>
-        </div>
-
-        <div className="analytics-section">
-          
-        </div>
-
+        </div> 
       </div>
     </div>
   );

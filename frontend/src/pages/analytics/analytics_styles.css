@@ -16,11 +16,16 @@
   padding: 30px;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   align-items: start;
   max-height: 100vh; 
   overflow-y: auto; 
+}
+
+/* Make the first section (line chart) span both columns */
+.analytics-section:first-child {
+  grid-column: span 2;
 }
 
 .analytics-section {
