@@ -5,6 +5,7 @@ import QueueIcon from '../../assets/tast-queue.png';
 import SettingsIcon from '../../assets/settings.png';
 import SupportIcon from '../../assets/support.png';
 import UpdateIcon from '../../assets/refresh-cw.png';
+import PricingIcon from '../../assets/clipboard.png';
 import AnalyticsIcon from '../../assets/trending-up.png';
 import LogoutIcon from '../../assets/log-out.png';
 import './nav_styles.css';
@@ -45,6 +46,10 @@ const Navbar = () => {
             <a onClick={() => navigate("/analytics")}>
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
+            </a>
+            <a onClick={() => navigate("/serviceOffers")}>
+              <img src={PricingIcon} alt="ServiceOffers" className="nav-icon" />
+              <span>Service Offers</span>
             </a>
             <a onClick={() => navigate("/medicalStaff")}>
               <img src={StethoscopeIcon} alt="MedicalStaff" className="nav-icon" />

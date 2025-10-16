@@ -134,8 +134,7 @@ const UploadExport = ({
                     name="radiographic_impressions"
                     value={formValues.radiographic_impressions}
                     onChange={handleInput}
-                    placeholder="Enter a description..."
-                    required/>
+                    placeholder="Enter a description..."/>
                 </div>
 
                 <div className="btns">

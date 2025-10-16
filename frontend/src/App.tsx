@@ -11,6 +11,8 @@ import AddService from './pages/add-service/add_service';
 import ServiceRecord from './pages/service-record/service_record';
 import UpdateInfo from './pages/update-info/update-info';
 import Analytics from './pages/analytics/analytics';
+import ServiceOffers from './pages/service-offers/service_offers';
+import MedicalStaff from './pages/medical-staff/medical_staff';
 function App() {
 
   return (
@@ -61,6 +63,16 @@ function App() {
         <Route path="/analytics" element={
             <ProtectedRoute>
               <Analytics />
+            </ProtectedRoute>} 
+        />
+        <Route path="/serviceOffers" element={
+            <ProtectedRoute>
+              <ServiceOffers />
+            </ProtectedRoute>} 
+        />
+        <Route path="/medicalStaff" element={
+            <ProtectedRoute>
+              <MedicalStaff />
             </ProtectedRoute>} 
         />
       </Routes>
