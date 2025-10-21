@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import './login_styles.css'
-import Logo from '../../assets/logo2.png';
+import Logo from '../../assets/Logo3.png';
 
 const IP = import.meta.env.VITE_SERVER_IP_ADD;
 
@@ -42,7 +42,7 @@ function login() {
         <div className='sub-container'>
             <div className="logo-container">
                 <div>
-                    <img src={Logo} alt="Logo" style={{ width: '300px', height: '300px' }} />
+                    <img src={Logo} alt="Logo" style={{ width: '250px', height: '250px' }} />
                 </div>
             </div>
             <div className="login-container">

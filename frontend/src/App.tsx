@@ -2,9 +2,7 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login/login";
 import Dashboard from "./pages/dashboard/dashboard";
-import FormPage from "./pages/form/form_page";
 import ProtectedRoute from './components/routeGuard/routeGuard';
-import ServicesPage from "./pages/services/services"
 import QueuePage from './pages/queue/queue';
 import AddPatient from './pages/add-patient/add_patient';
 import Records from './pages/patient-records/patient_records'; 
@@ -12,7 +10,9 @@ import PatientDetails from './pages/patient-details/patient_details';
 import AddService from './pages/add-service/add_service';
 import ServiceRecord from './pages/service-record/service_record';
 import UpdateInfo from './pages/update-info/update-info';
-
+import Analytics from './pages/analytics/analytics';
+import ServiceOffers from './pages/service-offers/service_offers';
+import MedicalStaff from './pages/medical-staff/medical_staff';
 function App() {
 
   return (
@@ -23,16 +23,6 @@ function App() {
         <Route path="/dashboard" element={
             <ProtectedRoute> 
               <Dashboard/> 
-            </ProtectedRoute>} 
-        />
-        <Route path="/forms" element={
-            <ProtectedRoute> 
-            <FormPage/>
-            </ProtectedRoute>} 
-        />
-        <Route path="/services" element={
-            <ProtectedRoute> 
-            <ServicesPage/>
             </ProtectedRoute>} 
         />
         <Route path="/queue" element={
@@ -68,6 +58,21 @@ function App() {
         <Route path="/patients/update-info/:id" element={
             <ProtectedRoute>
               <UpdateInfo />
+            </ProtectedRoute>} 
+        />
+        <Route path="/analytics" element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>} 
+        />
+        <Route path="/serviceOffers" element={
+            <ProtectedRoute>
+              <ServiceOffers />
+            </ProtectedRoute>} 
+        />
+        <Route path="/medicalStaff" element={
+            <ProtectedRoute>
+              <MedicalStaff />
             </ProtectedRoute>} 
         />
       </Routes>

@@ -1,14 +1,16 @@
-import Logo from '../../assets/logo2.png';
+import Logo from '../../assets/Logo3.png';
 import DashboardIcon from '../../assets/dashboard.png';
 import PatientsIcon from '../../assets/patient-records.png';
 import QueueIcon from '../../assets/tast-queue.png';
 import SettingsIcon from '../../assets/settings.png';
 import SupportIcon from '../../assets/support.png';
 import UpdateIcon from '../../assets/refresh-cw.png';
+import PricingIcon from '../../assets/clipboard.png';
 import AnalyticsIcon from '../../assets/trending-up.png';
 import LogoutIcon from '../../assets/log-out.png';
 import './nav_styles.css';
 import { useNavigate } from 'react-router-dom';
+import StethoscopeIcon from '../../assets/stethoscope_light.png'
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -25,11 +27,8 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-options">
         <div className="logo">
-          <img src={Logo} alt="Logo" style={{ width: '180px', height: '180px' }} />
+          <img src={Logo} alt="Logo" style={{ width: '180px', height: '180px', marginBottom:'30px' }} />
         </div>
-
-        {isAdmin && (
-          <>
             <a onClick={() => navigate("/dashboard")} className="admin-only">
               <img src={DashboardIcon} alt="Dashboard" className="nav-icon" />
               <span>Dashboard</span>
@@ -42,14 +41,20 @@ const Navbar = () => {
               <img src={QueueIcon} alt="Queue" className="nav-icon" />
               <span>Task Queue</span>
             </a>
+        {isAdmin && (
+          <>
             <a onClick={() => navigate("/analytics")}>
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
             </a>
-            {/* <a onClick={() => navigate("/update/info")}>
-              <img src={UpdateIcon} alt="Update" className="nav-icon" />
-              <span>Update Info</span>
-            </a> */}
+            <a onClick={() => navigate("/serviceOffers")}>
+              <img src={PricingIcon} alt="ServiceOffers" className="nav-icon" />
+              <span>Service Offers</span>
+            </a>
+            <a onClick={() => navigate("/medicalStaff")}>
+              <img src={StethoscopeIcon} alt="MedicalStaff" className="nav-icon" />
+              <span>Medical Staff</span>
+            </a>
           </>
         )} 
       </div>

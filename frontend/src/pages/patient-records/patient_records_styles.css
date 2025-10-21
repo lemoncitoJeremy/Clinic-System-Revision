@@ -42,17 +42,18 @@
 }
 
 .add-btn {
-  background-color: #009a79;
+  background-color: #2596be;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 15px;
   cursor: pointer;
   padding: 0.5rem 1rem;
 }
 
 .add-btn:hover {
-  background-color: #66bba9;
+  background-color: #82c7e0;
 }
 
 .p-r-table {

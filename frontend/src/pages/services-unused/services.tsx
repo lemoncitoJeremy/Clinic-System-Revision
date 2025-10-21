@@ -1,4 +1,4 @@
-import Navbar from "../../components/navigation bar/navbar"
+import Navbar from "../../components/navigation bar/Navbar"
 import "./services_styles.css"
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
