@@ -1,4 +1,4 @@
-import Navbar from "../../components/navigation bar/Navbar";
+import Navbar from "../../components/navigation bar/navbar";
 import PatientInfo from "../../components/patient-details/patient-info/PatientInfo";
 import "./patient_details_styles.css";
 

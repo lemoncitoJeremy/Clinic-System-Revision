@@ -24,9 +24,9 @@
 }
 
 
-/* .analytics-section:first-child {
+.analytics-section:first-child {
   grid-column: span 2;
-} */
+}
 
 .analytics-section {
   background: #fff;

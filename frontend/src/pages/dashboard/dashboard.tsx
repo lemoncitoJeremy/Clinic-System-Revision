@@ -1,4 +1,4 @@
-import Navbar from '../../components/navigation bar/Navbar';
+import Navbar from '../../components/navigation bar/navbar';
 import './dashboard_styles.css';
 import DashTable from '../../components/dash/table/DashTable';
 import DashKpis from '../../components/dash/kpis/DashKpis';

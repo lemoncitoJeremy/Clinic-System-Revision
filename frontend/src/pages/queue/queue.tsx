@@ -1,4 +1,4 @@
-import Navbar from '../../components/navigation bar/Navbar';
+import Navbar from '../../components/navigation bar/navbar';
 import QueueTable from '../../components/queue/queue-table/QueueTable';
 import './queue_styles.css';
 

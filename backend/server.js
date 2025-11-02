@@ -114,7 +114,6 @@ app.post('/login', (req, res) => {
 });
 
     
-    
 app.get("/selectService/:service", (req, res) => {
     const service = req.params.service;
     const sqlService = dbQueries.queries.selectService;
@@ -165,8 +164,6 @@ app.get("/check-patientId", (req, res) => {
         }
     });
 });
-
-
 
 
 app.post("/register-patient", async (req, res) => {
@@ -239,6 +236,7 @@ app.post("/register-patient", async (req, res) => {
     }
 });
 
+
 app.put("/update/patient/:id", async (req, res) => {
     const { id } = req.params;
     const {
@@ -301,6 +299,7 @@ app.get("/patients", (req, res) => {
     });
 });
 
+
 app.get("/search", (req, res) => {
     let { Input } = req.query;
     
@@ -323,6 +322,7 @@ app.get("/search", (req, res) => {
         }
     );
 });
+
 
 app.get("/radiology", (req, res) => {
     const sqlRadiologist = dbQueries.queries.RegisteredRadiologist;
@@ -355,6 +355,7 @@ app.get("/radiology", (req, res) => {
 
 });
 
+
 app.get("/patients/:id", (req, res) => {
     const { id } = req.params;
     const sql = dbQueries.queries.GetPatientById;
@@ -376,6 +377,7 @@ app.get("/patients/:id", (req, res) => {
         res.json({ success: true, RegisteredPatients: results[0] });
     });
     });
+
 
 app.get("/patients/:id/s-rec", (req, res) => {
     const { id } = req.params;
@@ -399,6 +401,7 @@ app.get("/patients/:id/s-rec", (req, res) => {
     });
     });
 
+
 app.get("/patients/:id/cases", (req, res) => {
     const { id } = req.params;
     const sql = dbQueries.queries.RetrievePatientCases;
@@ -411,6 +414,7 @@ app.get("/patients/:id/cases", (req, res) => {
     });
 });
 
+
 app.get("/patients/:id/cases/status", (req, res) => {
     const { id } = req.params;
     const sql = dbQueries.queries.CheckCaseStatus;
@@ -422,6 +426,7 @@ app.get("/patients/:id/cases/status", (req, res) => {
         res.json({ success: true, case_status: results[0]?.status});
     });
 });
+
 
 app.get("/check-case", (req, res) => {
     const sql = dbQueries.queries.checkCase;
@@ -448,6 +453,7 @@ app.get("/check-case", (req, res) => {
     });
 });
 
+
 app.post("/create-case", async (req, res) => {
     const {
         case_Id,
@@ -460,7 +466,7 @@ app.post("/create-case", async (req, res) => {
         notes,
         status
     } = req.body;
-
+    console.log(req.body)
     try {
         let physicianId;
         const results = await new Promise((resolve, reject) => {
@@ -491,6 +497,19 @@ app.post("/create-case", async (req, res) => {
 
         const normalizedNotes = notes && notes.trim() !== "" ? notes : "N/A";
         
+        examID = await new Promise((resolve, reject) => {
+                db.query(
+                    dbQueries.queries.RetrieveExamId, 
+                    [examType],
+                    (err, res) => {
+                        if (err) return reject(err);
+                        resolve(res); 
+                    }
+                );
+            });
+               
+        const examTypeId = examID[0].exam_id
+
         await new Promise((resolve, reject) => {
             db.query(
                 dbQueries.queries.createCase,
@@ -500,7 +519,7 @@ app.post("/create-case", async (req, res) => {
                     patientSource,
                     physicianId,
                     requestDate,
-                    examType,
+                    examTypeId,
                     serviceType,
                     normalizedNotes,
                     status
@@ -729,7 +748,7 @@ app.get("/reports/:id_report", async (req, res) => {
         doc.font("Helvetica").text(new Date(data.request_date).toLocaleDateString());
 
         doc.font("Helvetica-Bold").text("Exam Type: ", { continued: true });
-        doc.font("Helvetica").text(data.exam_type);
+        doc.font("Helvetica").text(data.exam_name);
         
         doc.moveDown();
 
@@ -903,6 +922,28 @@ app.get("/rad-serv", (req, res) => {
         }
 
         res.json({ success: true, radServ: results });
+    });
+});
+
+app.get("/phys-earns", (req, res) => {
+    const sql = dbQueries.queries.Analytics_earnings_perPhysician;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, error: "Database error" });
+        }
+        res.json({ success: true, earnings: results });
+    });
+});
+
+app.get("/rad-rwrds", (req, res) => {
+    const sql = dbQueries.queries.Analytics_earnings_perRad;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, error: "Database error" });
+        }
+        res.json({ success: true, earnings: results });
     });
 });
 

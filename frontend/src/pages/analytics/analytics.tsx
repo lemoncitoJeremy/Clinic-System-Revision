@@ -3,7 +3,8 @@ import XuChart from "../../components/analytics/Xr_ul-chart/XuChart";
 import RefTable from "../../components/analytics/RefTable/RefTable";
 import RtechTable from "../../components/analytics/RtechTable.tsx/RtechTable";
 import "./analytics_styles.css";
-import RwrdsTable from "../../components/analytics/RwrdsTable/RwrdsTable";
+import PhysRwrdsTable from "../../components/analytics/PhysRwrdsTable/PhysRwrdsTable";
+import RadRwrdsTable from "../../components/analytics/RadRwrdsTable/RadRwrdsTable";
 
 const Analytics = () => {
 
@@ -14,9 +15,10 @@ const Analytics = () => {
       </div>
       <div className="analytics-content">
         <XuChart/>
-        <RwrdsTable/>
         <RefTable/>
         <RtechTable/>
+        <PhysRwrdsTable/>
+        <RadRwrdsTable/>
       </div>
     </div>
   );

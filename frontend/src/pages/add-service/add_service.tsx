@@ -1,4 +1,4 @@
-import Navbar from "../../components/navigation bar/Navbar";
+import Navbar from "../../components/navigation bar/navbar";
 import ServiceForm from "../../components/add-service/ServiceForm";
 import "./add_service_styles.css";
 

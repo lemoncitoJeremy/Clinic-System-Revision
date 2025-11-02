@@ -16,7 +16,7 @@
 .logo-container{
     width: 250px;
     height: 300px;
-    outline:solid 1px;
+    outline:solid 1px #ddd;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +26,7 @@
 .login-container {
     width: 250px;
     height: 300px;
-    outline:solid 1px;
+    outline:solid 1px #ddd;
     display: flex;
     flex-direction: column;
 }

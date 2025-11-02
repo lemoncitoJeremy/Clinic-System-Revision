@@ -60,6 +60,7 @@
 .kpi-cards {
   display: flex;
   gap: 20px;
+  margin-bottom: 5px;
 }
 
 .kpi-card {

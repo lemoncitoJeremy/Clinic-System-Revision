@@ -1,4 +1,4 @@
-import Navbar from '../../components/navigation bar/Navbar'
+import Navbar from '../../components/navigation bar/navbar'
 import PatientForm from '../../components/add-patient/PatientForm'
 import './add_patient_styles.css'
 

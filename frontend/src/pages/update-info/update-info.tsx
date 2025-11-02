@@ -1,5 +1,5 @@
 
-import Navbar from '../../components/navigation bar/Navbar';
+import Navbar from '../../components/navigation bar/navbar';
 import UpdateForm from '../../components/update-info/UpdateForm';
 import { useParams } from 'react-router-dom';
 import './update-info-styles.css'
