@@ -47,14 +47,14 @@ const Navbar = () => {
               <img src={AnalyticsIcon} alt="Analytics" className="nav-icon" />
               <span>Analytics</span>
             </a>
-            <a onClick={() => navigate("/serviceOffers")}>
+            {/* <a onClick={() => navigate("/serviceOffers")}>
               <img src={PricingIcon} alt="ServiceOffers" className="nav-icon" />
               <span>Service Offers</span>
             </a>
             <a onClick={() => navigate("/medicalStaff")}>
               <img src={StethoscopeIcon} alt="MedicalStaff" className="nav-icon" />
-              <span>Medical Staff</span>
-            </a>
+              <span>Staff</span>
+            </a> */}
           </>
         )} 
       </div>

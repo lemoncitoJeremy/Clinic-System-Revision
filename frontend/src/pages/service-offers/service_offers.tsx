@@ -1,8 +1,13 @@
 import './serviceOfferStyles.css'
+import Navbar from '../../components/navigation bar/navbar'
 
 const ServiceOffers = () => {
   return (
-    <div>ServiceOffers</div>
+    <div>
+      <div className="service-off-navigation">
+        <Navbar />
+      </div>
+    </div>
   )
 }
 
