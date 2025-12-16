@@ -1,4 +1,4 @@
-import Navbar from "../../components/navigation bar/Navbar";
+import Navbar from "../../components/navigation bar/navbar";
 import XuChart from "../../components/analytics/Xr_ul-chart/XuChart";
 import RefTable from "../../components/analytics/RefTable/RefTable";
 import RtechTable from "../../components/analytics/RtechTable.tsx/RtechTable";
@@ -17,8 +17,8 @@ const Analytics = () => {
         <XuChart/>
         <RefTable/>
         <RtechTable/>
-        <PhysRwrdsTable/>
-        <RadRwrdsTable/>
+        {/* <PhysRwrdsTable/>
+        <RadRwrdsTable/> */}
       </div>
     </div>
   );
